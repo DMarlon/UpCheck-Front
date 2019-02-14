@@ -1,0 +1,7 @@
+web:
+  container_name: upcheck_web
+  build: .
+  ports:
+    - 8181:8080
+  volumes:
+    - ./:/application
