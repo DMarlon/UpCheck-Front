@@ -66,9 +66,9 @@ export default {
             if (!this.$refs.formAuth.validate())
                 return
 
-            this.$http.get().then(() => console.log("ok")).catch(error => console.log(error));;
+            this.$http.get("login").then(e => console.log(e)).catch(error => console.log(error));;
 
-            //this.resetData()
+            // this.resetData()
         },
         register() {
             if (!this.$refs.formAuth.validate())
