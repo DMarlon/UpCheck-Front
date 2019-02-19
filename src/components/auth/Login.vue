@@ -8,20 +8,20 @@
                     </v-toolbar>
                     <v-card-text>
                         <v-form ref="formAuth">
-                            <v-text-field v-if="!haveRegister" v-model.trim="user.name" v-bind:rules="nameRules" prepend-icon="person" name="name" label="Nome Completo" type="Nome"/>
+                            <v-text-field v-if="!showSignup" v-model.trim="user.name" v-bind:rules="nameRules" prepend-icon="person" name="name" label="Nome Completo" type="Nome"/>
                             <v-text-field v-model.trim="user.email" v-bind:rules="emailRules" prepend-icon="alternate_email" name="email" label="E-mail" type="text"/>
                             <v-text-field v-model.trim="user.password" prepend-icon="lock" name="password" label="Senha" id="password" type="password"/>
-                    <v-text-field v-if="!haveRegister" v-bind:rules="passwordConfirm" prepend-icon="lock" name="password_confirm" label="Confirme a Senha" id="password_confirm" type="password"/>
+                    <v-text-field v-if="!showSignup" v-bind:rules="passwordConfirm" prepend-icon="lock" name="password_confirm" label="Confirme a Senha" id="password_confirm" type="password"/>
                         </v-form>
                     </v-card-text>
                     <v-card-actions>
                         <v-spacer/>
-                        <v-btn v-if="haveRegister" v-on:click="login()" class="white--text" color="teal darken-1">Entrar</v-btn>
+                        <v-btn v-if="showSignup" v-on:click="login()" class="white--text" color="teal darken-1">Entrar</v-btn>
                         <v-btn v-else v-on:click="register()" class="white--text" color="teal darken-1">Cadastrar</v-btn>
                     </v-card-actions>
                     <v-toolbar dark color="teal darken-1">
-                        <a style="color: inherit" v-show="haveRegister" v-on:click="changeRegister(false)">Não tem cadastro? <strong>Cadastre-se!</strong></a>
-                        <a style="color: inherit" v-show="!haveRegister" v-on:click="changeRegister(true)">Já tem cadastro? <strong>Entre!</strong></a>
+                        <a style="color: inherit" v-show="showSignup" v-on:click="changeRegister(false)">Não tem cadastro? <strong>Cadastre-se!</strong></a>
+                        <a style="color: inherit" v-show="!showSignup" v-on:click="changeRegister(true)">Já tem cadastro? <strong>Entre!</strong></a>
                     </v-toolbar>
                 </v-card>
                 <v-alert :value="notify.show" :type="notify.type">{{ notify.message }}</v-alert>
@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import { userKey } from '@/constants.js';
 
 export default {
     name: "Login",
@@ -47,7 +47,7 @@ export default {
                 type: "error",
                 message: ""
             },
-            haveRegister: true,
+            showSignup: true,
         }
     },
     computed: {
@@ -70,8 +70,8 @@ export default {
 
     },
     methods: {
-        changeRegister(haveRegister) {
-            this.haveRegister = haveRegister
+        changeRegister(showSignup) {
+            this.showSignup = showSignup
             this.notify.show = false
             this.notify.message = ""
         },
@@ -80,15 +80,21 @@ export default {
                 return
 
             this.$http.get("login", {headers: {"Authorization": "Basic " + btoa(this.user.email + ":" + this.user.password)}})
-                .then(responde => {
+                .then(response => {
                     this.notify.message= ""
                     this.notify.show=false
                     this.resetData()
+
+                    this.$store.commit("setUser", response.data.user)
+                    localStorage.setItem(userKey, JSON.stringify(response.data.user));
+                    this.$router.push({name: "home"})
                 })
                 .catch(error => {
-                    this.notify.type="error"
-                    this.notify.message= error.response.data.message
-                    this.notify.show=true
+                    if (error && error.response) {
+                        this.notify.type="error"
+                        this.notify.message= error.response.data.message
+                        this.notify.show=true
+                    }
                 });
 
 
@@ -102,7 +108,7 @@ export default {
                     this.notify.type="success"
                     this.notify.message= "Cadastro efetuado com sucesso!"
                     this.notify.show=true
-                    this.haveRegister = true;
+                    this.showSignup = true;
                 })
                 .catch(error => {
                     this.notify.type="error"
