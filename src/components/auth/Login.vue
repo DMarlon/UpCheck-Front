@@ -96,8 +96,6 @@ export default {
                         this.notify.show=true
                     }
                 });
-
-
         },
         register() {
             if (!this.$refs.formAuth.validate())
