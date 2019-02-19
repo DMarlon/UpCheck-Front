@@ -8,9 +8,9 @@
                     </v-toolbar>
                     <v-card-text>
                         <v-form ref="formAuth">
-                            <v-text-field v-if="!haveRegister" v-model.trim="name" v-bind:rules="nameRules" prepend-icon="person" name="name" label="Nome Completo" type="Nome"/>
-                            <v-text-field v-model.trim="email" v-bind:rules="emailRules" prepend-icon="alternate_email" name="email" label="E-mail" type="text"/>
-                            <v-text-field v-model.trim="password" prepend-icon="lock" name="password" label="Senha" id="password" type="password"/>
+                            <v-text-field v-if="!haveRegister" v-model.trim="user.name" v-bind:rules="nameRules" prepend-icon="person" name="name" label="Nome Completo" type="Nome"/>
+                            <v-text-field v-model.trim="user.email" v-bind:rules="emailRules" prepend-icon="alternate_email" name="email" label="E-mail" type="text"/>
+                            <v-text-field v-model.trim="user.password" prepend-icon="lock" name="password" label="Senha" id="password" type="password"/>
                     <v-text-field v-if="!haveRegister" v-bind:rules="passwordConfirm" prepend-icon="lock" name="password_confirm" label="Confirme a Senha" id="password_confirm" type="password"/>
                         </v-form>
                     </v-card-text>
@@ -20,10 +20,11 @@
                         <v-btn v-else v-on:click="register()" class="white--text" color="teal darken-1">Cadastrar</v-btn>
                     </v-card-actions>
                     <v-toolbar dark color="teal darken-1">
-                        <a style="color: inherit" v-show="haveRegister" v-on:click="haveRegister = !haveRegister">Não tem cadastro? <strong>Cadastre-se!</strong></a>
-                        <a style="color: inherit" v-show="!haveRegister" v-on:click="haveRegister = !haveRegister">Já tem cadastro? <strong>Entre!</strong></a>
+                        <a style="color: inherit" v-show="haveRegister" v-on:click="changeRegister(false)">Não tem cadastro? <strong>Cadastre-se!</strong></a>
+                        <a style="color: inherit" v-show="!haveRegister" v-on:click="changeRegister(true)">Já tem cadastro? <strong>Entre!</strong></a>
                     </v-toolbar>
                 </v-card>
+                <v-alert :value="notify.show" :type="notify.type">{{ notify.message }}</v-alert>
             </v-flex>
         </v-layout>
     </v-container>
@@ -36,9 +37,16 @@ export default {
     name: "Login",
     data() {
         return {
-            name: "",
-            email: "",
-            password: "",
+            user: {
+                name: "",
+                email: "",
+                password: ""
+            },
+            notify: {
+                show: false,
+                type: "error",
+                message: ""
+            },
             haveRegister: true,
         }
     },
@@ -56,26 +64,51 @@ export default {
         },
         passwordConfirm() {
             const rules = []
-            rules.push(v => (!!v && v) === this.password || "As senhas não conferem!");
+            rules.push(v => (!!v && v) === this.user.password || "As senhas não conferem!");
             return rules;
         },
 
     },
     methods: {
+        changeRegister(haveRegister) {
+            this.haveRegister = haveRegister
+            this.notify.show = false
+            this.notify.message = ""
+        },
         login() {
             if (!this.$refs.formAuth.validate())
                 return
 
-            this.$http.get("login").then(e => console.log(e)).catch(error => console.log(error));;
+            this.$http.get("login", {headers: {"Authorization": "Basic " + btoa(this.user.email + ":" + this.user.password)}})
+                .then(responde => {
+                    this.notify.message= ""
+                    this.notify.show=false
+                    this.resetData()
+                })
+                .catch(error => {
+                    this.notify.type="error"
+                    this.notify.message= error.response.data.message
+                    this.notify.show=true
+                });
 
-            // this.resetData()
+
         },
         register() {
             if (!this.$refs.formAuth.validate())
                 return
 
-            alert("Nome: "+this.name + " Email: " + this.email + " Password:" + this.password)
-            this.resetData()
+            this.$http.post("login/create", {...this.user})
+                .then(responde => {
+                    this.notify.type="success"
+                    this.notify.message= "Cadastro efetuado com sucesso!"
+                    this.notify.show=true
+                    this.haveRegister = true;
+                })
+                .catch(error => {
+                    this.notify.type="error"
+                    this.notify.message= error.response.data.message
+                    this.notify.show=true
+                });
         },
         resetData() {
             Object.assign(this.$data, this.$options.data.apply(this))
