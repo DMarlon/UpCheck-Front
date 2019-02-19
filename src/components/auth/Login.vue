@@ -59,7 +59,7 @@ export default {
         emailRules() {
             const rules = []
             rules.push(v => (v || "") != "" || "E-mail é obrigatorio!");
-            rules.push(v =>  /.+@.+\.{1,}.+/.test((v || "")) || "E-mail invalido!");
+            rules.push(v =>  /.+@.+\.{1,}.+/.test((v || "")) || "E-mail inválido!");
             return rules;
         },
         passwordConfirm() {
