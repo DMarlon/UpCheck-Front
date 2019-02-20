@@ -22,10 +22,13 @@ export default {
     },
     actions: {
         setIsMenuVisible(context, isVisible) {
+            context.commit("setShowMenu", false)
+
             if (!context.getters.hasUser)
                 context.commit("setIsMenuVisible", false)
             else
                 context.commit("setIsMenuVisible", (isVisible === undefined) ? !context.getters.isMenuVisible : isVisible)
+
         },
         setShowMenu(context, show) {
             if (!context.getters.hasUser)
