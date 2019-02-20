@@ -1,21 +1,19 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import axios from 'axios'
 
 Vue.use(Vuex)
 
+import template from "@/stores/template.js"
+
 export default new Vuex.Store({
   state: {
-    user: null
+
+  },
+  modules: {
+    template,
   },
   mutations: {
-    setUser(state, user) {
-      state.user = user
-      if (user)
-        axios.defaults.headers.common["token"] = user.token;
-      else
-        delete axios.defaults.headers.common["token"]
-    }
+
   },
   actions: {
 

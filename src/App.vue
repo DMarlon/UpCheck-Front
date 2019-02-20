@@ -1,71 +1,66 @@
 <template>
-  <div id="app">
-      <v-app id="inspire">
-        <router-view>
-          <HelloWorld />
-        </router-view>
-      </v-app>
-  </div>
+    <v-app id="inspire" :dark="dark">
+        <Header />
+        <Menu />
+        <Loading v-if="validatingToken" />
+        <Content  v-else></Content>
+        <Footer v-bind:text="'PHBit Company'"/>
+    </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-import { userKey } from '@/constants.js'
+import Header from '@/components/template/Header.vue';
+import Menu from '@/components/template/Menu.vue';
+import Content from '@/components/template/Content.vue';
+import Footer from '@/components/template/Footer.vue';
+import Loading from '@/components/Loading.vue';
+
+import { userKey } from '@/constants.js';
 
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  },
-  data () {
-    return {
-      validatingToken: true
+    name: 'App',
+    components: {
+        Loading,
+        Header,
+        Menu,
+        Content,
+        Footer
+    },
+    data () {
+        return {
+            dark: true,
+            validatingToken: true,
+        }
+    },
+    created() {
+        this.validateToken();
+    },
+    methods: {
+        async validateToken() {
+            this.validatingToken = true
+
+            const userData = JSON.parse(localStorage.getItem(userKey))
+            this.$store.dispatch("template/setUser", userData)
+
+            if (!userData) {
+                this.validatingToken = false
+                this.$router.push({name: "auth"})
+                return
+            }
+
+            const response = await this.$http.get("token", {userData});
+
+            if (response.status === 200)
+                this.$store.dispatch("template/setUser", userData)
+            else{
+                localStorage.removeItem(userKey)
+                this.$router.push({name: "auth"})
+            }
+
+            this.validatingToken = false;
+
+        }
     }
-  },
-  created() {
-    // this.$http.interceptors.response.use(undefined, function (error) {
-    //   return new Promise(function (resolve, reject) {
-    //     if (error.status === 403) {
-    //       this.$router.push({name: "auth"})
-    //     }
-    //     throw error;
-    //   });
-    // });
-
-    // if (error.response.status === 401) {
-    // const requestConfig = error.config;
-    // return axios(requestConfig);
-    // }
-    // return Promise.reject(error);
-
-    //this.validateToken();
-  },
-  methods: {
-    async validateToken() {
-      this.validatingToken = true
-
-      const userData = JSON.stringify(localStorage.getItem(userKey))
-      this.$store.commit("setUser", userData)
-
-      if (!userData) {
-        this.validatingToken = false
-        this.$router.push({name: "auth"})
-        return
-      }
-
-      const res = await this.$http.post("validadeLogin", {userData});
-
-      if (res.data)
-        this.$store.commit("setUser", userData)
-      else{
-        localStorage.removeItem(userKey)
-        this.$router.push({name: "auth"})
-      }
-
-      this.validatingToken = false;
-
-    }
-  }
 }
 </script>
 

@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
-import Login from './components/auth/Login.vue'
+import Home from '@/components/Home.vue'
+import Login from '@/components/auth/Login.vue'
 
 Vue.use(Router)
 
@@ -14,7 +14,12 @@ const router = new Router({
     {
       path: '/',
       name: 'home',
-      component: HelloWorld
+      component: Home
+    },
+    {
+      path: '/auth',
+      name: 'auth',
+      component: Login
     },
     {
       path: '/about',
@@ -23,22 +28,17 @@ const router = new Router({
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
-    },
-    {
-      path: '/auth',
-      name: 'auth',
-      component: Login
     }
   ]
 })
 
 router.beforeEach((to, from, next) => {
-  if (to.name === "auth") {
-    next()
-  } else {
-    const userData = JSON.parse(localStorage.getItem(userKey));
-    (userData && userData.token && userData.token != "") ? next() : next({ path: '/auth'})
-  }
+    if (to.name === "auth") {
+        next()
+    } else {
+        const userData = JSON.parse(localStorage.getItem(userKey));
+        (userData && userData.token && userData.token != "") ? next() : next({ path: '/auth'})
+    }
 });
 
 export default router
