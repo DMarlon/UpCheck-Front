@@ -1,13 +1,13 @@
 <template>
     <v-menu v-if="isMenuVisible" v-bind:close-on-content-click="false" v-bind:nudge-width="200" offset-x>
             <v-btn icon slot="activator">
-                <v-icon>account_circle</v-icon>
+                <v-icon>drag_indicator</v-icon>
             </v-btn>
             <v-card>
                 <v-list>
                     <v-list-tile avatar>
                         <v-list-tile-avatar>
-                            <Gravatar :email="userEmail" alt="User"/>
+                            <Gravatar v-bind:email="userEmail" alt="User"/>
                         </v-list-tile-avatar>
                         <v-list-tile-content>
                             <v-list-tile-title>{{ userFirstName }}</v-list-tile-title>
@@ -69,7 +69,6 @@ export default {
         },
     },
     methods: {
-
         logout() {
             localStorage.removeItem(userKey);
             this.$store.dispatch("template/setUser", null);
