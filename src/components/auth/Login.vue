@@ -6,10 +6,10 @@
         </v-toolbar>
         <v-card-text>
             <v-form ref="formAuth">
-                <v-text-field v-if="!showSignup" v-model.trim="user.name" v-bind:rules="nameRules" prepend-icon="person" name="name" label="Nome Completo" type="Nome"/>
-                <v-text-field v-model.trim="user.email" v-bind:rules="emailRules" prepend-icon="alternate_email" name="email" label="E-mail" type="text"/>
-                <v-text-field v-model.trim="user.password" prepend-icon="lock" name="password" label="Senha" id="password" type="password"/>
-        <v-text-field v-if="!showSignup" v-bind:rules="passwordConfirm" prepend-icon="lock" name="password_confirm" label="Confirme a Senha" id="password_confirm" type="password"/>
+                <v-text-field color="none" v-if="!showSignup" v-model.trim="user.name" v-bind:rules="nameRules" prepend-icon="person" name="name" label="Nome Completo" type="Nome"/>
+                <v-text-field color="none" v-model.trim="user.email" v-bind:rules="emailRules" prepend-icon="alternate_email" name="email" label="E-mail" type="text"/>
+                <v-text-field color="none" v-model.trim="user.password" prepend-icon="lock" name="password" label="Senha" id="password" type="password"/>
+                <v-text-field color="none" v-if="!showSignup" v-bind:rules="passwordConfirm" prepend-icon="lock" name="password_confirm" label="Confirme a Senha" id="password_confirm" type="password"/>
             </v-form>
         </v-card-text>
         <v-card-actions>

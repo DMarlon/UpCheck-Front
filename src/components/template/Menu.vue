@@ -1,11 +1,10 @@
 <template>
     <v-navigation-drawer v-model="showMenu" :clipped="true" absolute overflow app>
         <v-list dense class="pt-0">
-            <v-list-tile v-for="item in items" :key="item.title" @click="showAlert(item)">
+            <v-list-tile exact active-class="default-class teal darken-1 white--text" v-for="item in items" :key="item.title" v-bind:to="item.to">
                 <v-list-tile-action>
                     <v-icon>{{ item.icon }}</v-icon>
                 </v-list-tile-action>
-
                 <v-list-tile-content>
                     <v-list-tile-title>{{ item.title }}</v-list-tile-title>
                 </v-list-tile-content>
@@ -20,14 +19,9 @@ export default {
     data () {
         return {
             items: [
-                { title: 'Home', icon: 'dashboard' },
-                { title: 'About', icon: 'question_answer' }
+                { title: 'Home', icon: 'dashboard', to: {name: 'home'} },
+                { title: 'About', icon: 'question_answer', to: {name: 'about'} }
             ]
-        }
-    },
-    methods: {
-        showAlert(item) {
-            alert(`click ${item.title} `);
         }
     },
     computed: {

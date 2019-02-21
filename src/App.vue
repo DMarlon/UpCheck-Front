@@ -13,27 +13,31 @@ import Header from '@/components/template/Header.vue';
 import Menu from '@/components/template/Menu.vue';
 import Content from '@/components/template/Content.vue';
 import Footer from '@/components/template/Footer.vue';
-import Loading from '@/components/Loading.vue';
+import Loading from '@/components/views/Loading.vue';
 
 import { userKey } from '@/constants.js';
 
 export default {
     name: 'App',
     components: {
-        Loading,
         Header,
         Menu,
+        Loading,
         Content,
         Footer
     },
     data () {
         return {
-            dark: true,
             validatingToken: true,
         }
     },
     created() {
         this.validateToken();
+    },
+    computed: {
+        dark() {
+            return this.$store.getters["template/dark"];
+        }
     },
     methods: {
         async validateToken() {

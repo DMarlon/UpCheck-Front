@@ -1,7 +1,7 @@
 <template>
-     <v-flex xs12 sm8 md4>
+     <div>
         <h1>Tela de Home</h1>
-     </v-flex>
+     </div>
 </template>
 
 <script>
