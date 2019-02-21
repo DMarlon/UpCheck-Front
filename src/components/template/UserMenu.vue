@@ -7,7 +7,7 @@
                 <v-list>
                     <v-list-tile avatar>
                         <v-list-tile-avatar>
-                            <img :src="require('@/assets/logo.svg')" alt="John">
+                            <Gravatar :email="userEmail" alt="User"/>
                         </v-list-tile-avatar>
                         <v-list-tile-content>
                             <v-list-tile-title>{{ userFirstName }}</v-list-tile-title>
@@ -38,9 +38,13 @@
 
 <script>
 import { userKey } from '@/constants.js';
+import Gravatar from 'vue-gravatar';
 
 export default {
     name: "UserMenu",
+    components: {
+        Gravatar
+    },
     computed: {
         isMenuVisible() {
             return this.$store.getters["template/isMenuVisible"]
@@ -50,6 +54,9 @@ export default {
         },
         userLastName() {
             return this.$store.getters["template/userLastName"]
+        },
+        userEmail() {
+            return this.$store.getters["template/userEmail"]
         },
         dark:{
             get() {

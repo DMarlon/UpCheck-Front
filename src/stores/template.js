@@ -68,6 +68,9 @@ export default {
         hasUser(state) {
             return state.user != null
         },
+        userEmail(state) {
+            return (state.user && state.user.email) ? state.user.email : ""
+        },
         userFirstName(state) {
             return (state.user && state.user.name) ? state.user.name.split(" ")[0] : ""
         },
