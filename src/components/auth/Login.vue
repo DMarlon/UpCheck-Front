@@ -2,7 +2,7 @@
     <v-flex xs12 sm8 md4>
     <v-card class="elevation-12">
         <v-toolbar dark color="teal darken-1">
-            <v-toolbar-title>Login</v-toolbar-title>
+            <v-toolbar-title><span v-if="!showSignup">Novo </span>Login</v-toolbar-title>
         </v-toolbar>
         <v-card-text>
             <v-form ref="formAuth">
