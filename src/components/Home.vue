@@ -1,6 +1,11 @@
 <template>
   <v-container grid-list-md>
     <v-layout row wrap>
+        <v-btn color="teal darken" dark absolute bottom right fab>
+            <v-icon>add</v-icon>
+        </v-btn>
+    </v-layout>
+    <v-layout row wrap>
       <v-flex xs12 sm6 md4 v-for="item in mocklist" v-bind:key="item.title">
          <PreviewCheckList v-bind:infos="item" />
       </v-flex>
@@ -29,7 +34,7 @@ export default {
             {
                title: "Conferir Cores",
                resume: "Conferir as corres do sistema para ver se a mesma esta de acordo entre todos",
-               userEmail: "marlon.d@outlook.com",
+               userEmail: "paulo.k@outlook.com",
                userName: "Paulo Klaus",
                questions: 136,
                answered: 23,
@@ -38,7 +43,7 @@ export default {
             {
                title: "Ganhar dinheiro",
                resume: "Fazer o sistema de um forma que todos ganham muito dinheiro.",
-               userEmail: "marlon.d@outlook.com",
+               userEmail: "feliz@outlook.com",
                userName: "Luis Fernando Kaifer",
                questions: 182,
                answered: 136,
@@ -47,7 +52,7 @@ export default {
             {
                title: "Teste",
                resume: "Testar para ver se esta fazendo a quebra de texto conforme o esperado pelo menu",
-               userEmail: "marlon.d@outlook.com",
+               userEmail: "algum@outlook.com",
                userName: "Marlon Dauernheimer",
                questions: 165,
                answered: 36,

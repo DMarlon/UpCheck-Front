@@ -1,19 +1,19 @@
 <template>
-    <v-card class="mx-auto" color="white--text" max-width="450" max-height="300" dark v-bind:to="infos.to">
+    <v-card class="mx-auto elevation-10" color="white--text" max-width="450" max-height="300" dark v-bind:to="infos.to">
       <v-card-title class="teal darken">
          <v-icon large left>check_circle_outline</v-icon>
-         <span class="title font-weight-light">{{ infos.title }}</span>
+         <span class="title text-truncate font-weight-light">{{ infos.title }}</span>
       </v-card-title>
 
       <v-card-text class="headline font-weight-bold teal darken-2">{{ infos.resume }}</v-card-text>
 
       <v-card-actions class="teal darken">
          <v-list-tile class="grow">
-            <v-list-tile-avatar color="grey darken-3">
+            <v-list-tile-avatar>
                <Gravatar v-bind:email="infos.userEmail" alt="User"/>
          </v-list-tile-avatar>
 
-         <v-list-tile-content>
+         <v-list-tile-content class="hidden-xs-only">
             <v-list-tile-title>{{ infos.userName }}</v-list-tile-title>
          </v-list-tile-content>
 
