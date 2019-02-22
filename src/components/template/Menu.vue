@@ -1,5 +1,5 @@
 <template>
-    <v-navigation-drawer v-model="showMenu" :clipped="true" absolute overflow app>
+    <v-navigation-drawer v-model="showMenu" :clipped="true" overflow app>
         <v-list dense class="pt-0">
             <v-list-tile exact active-class="default-class teal darken-1 white--text" v-for="item in items" :key="item.title" v-bind:to="item.to">
                 <v-list-tile-action>

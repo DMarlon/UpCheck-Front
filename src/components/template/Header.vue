@@ -1,5 +1,5 @@
 <template>
-    <v-toolbar :clipped-left="true" app absolute>
+    <v-toolbar :clipped-left="true" app >
         <v-toolbar-side-icon v-if="isMenuVisible" v-on:click.stop="showMenu()"/>
         <v-toolbar-title class="font-weight-black"><strong class="teal--text ">UP</strong><span class="white--text header-title-upcheck">CHECK</span></v-toolbar-title>
         <v-spacer></v-spacer>
