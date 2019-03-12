@@ -39,6 +39,9 @@ import { userKey } from '@/constants.js';
 
 export default {
     name: "Login",
+    props: {
+        token: {type: String, required: false}
+    },
     data() {
         return {
             user: {
@@ -54,6 +57,10 @@ export default {
             showSignup: true,
             loading: false,
         }
+    },
+    beforeMount(){
+        if (this.token)
+            this.accountActivation(this.token);
     },
     computed: {
         nameRules() {
@@ -72,7 +79,6 @@ export default {
             rules.push(v => (!!v && v) === this.user.password || "As senhas não conferem!");
             return rules;
         },
-
     },
     methods: {
         changeRegister(showSignup) {
@@ -111,6 +117,23 @@ export default {
 
             this.loading = true;
             this.$http.post("login/create", {...this.user})
+                .then(response => {
+                    this.loading = false;
+                    this.notify.type = "success"
+                    this.notify.message = response.data.message
+                    this.notify.show = true
+                    this.showSignup = true;
+                })
+                .catch(error => {
+                    this.loading = false;
+                    this.notify.type="error"
+                    this.notify.message= error.response.data.message
+                    this.notify.show=true
+                });
+        },
+        accountActivation(token) {
+            this.loading = true;
+            this.$http.get("/login/account/activation/"+token)
                 .then(response => {
                     this.loading = false;
                     this.notify.type = "success"

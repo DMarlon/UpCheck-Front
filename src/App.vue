@@ -32,7 +32,14 @@ export default {
         }
     },
     created() {
-        this.validateToken();
+        //RegExp("\/activation\/[0-9a-f]{40}").test(window.location.pathname)
+        let urlPath = window.location.pathname.split("/")
+        if (urlPath.length == 3 && urlPath[1]=="activation" && RegExp("[0-9a-f]{40}").test(urlPath[2])){
+            this.validatingToken = false;
+            this.$router.push({name: "activation", param: {token: urlPath[2]}})
+        }
+        else
+            this.validateToken();
     },
     computed: {
         dark() {
