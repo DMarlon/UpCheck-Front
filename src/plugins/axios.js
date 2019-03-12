@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import axios from 'axios'
+import { APILocation } from '@/settings.js';
 
-axios.defaults.baseURL = "http://localhost:8801/api/v1/"
+axios.defaults.baseURL = APILocation;
 
 axios.interceptors.response.use(undefined, error => {
     if (error && error.response && error.response.status === 401) {

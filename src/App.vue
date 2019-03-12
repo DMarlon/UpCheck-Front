@@ -3,7 +3,7 @@
         <Header />
         <Menu />
         <Loading v-if="validatingToken" />
-        <Content  v-else></Content>
+        <Content v-else></Content>
         <Footer v-bind:text="'PHBit Company'"/>
     </v-app>
 </template>
