@@ -37,6 +37,11 @@ const router = new Router({
 			// which is lazy-loaded when the route is visited.
 			component: () => import(/* webpackChunkName: "about" */ '@/components/views/About.vue')
 		},
+		{
+			//Caso digite rota inexistente vai para o home
+			path: '*',
+			redirect: 'home'
+		}
 	]
 })
 

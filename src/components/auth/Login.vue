@@ -1,6 +1,6 @@
 <template>
     <v-flex xs12 sm8 md4>
-        <v-card class="elevation-12">
+        <v-card :light="true" class="elevation-12">
             <v-toolbar dark color="teal darken-1">
                 <v-toolbar-title><span v-if="!showSignup">Novo </span>Login</v-toolbar-title>
             </v-toolbar>
