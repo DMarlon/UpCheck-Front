@@ -1,13 +1,13 @@
 <template>
-   <v-card hover class="mx-auto fill-height overflow-hidden" color="white--text" dark v-bind:to="infos.to">
+   <v-card hover class="fill-height overflow-hidden" color="white--text" dark v-bind:to="infos.to">
       <v-card-title class="teal darken">
          <span class="title text-truncate">
             <v-icon large left>check_circle_outline</v-icon>
-            {{ infos.title }}
+            <span>{{ infos.title }}</span>
          </span>
       </v-card-title>
 
-      <v-card-text class="headline ma-auto font-weight-bold teal darken-2">{{ infos.resume }}</v-card-text>
+      <v-card-text class=" headline font-weight-bold teal darken-2">{{ infos.resume }}</v-card-text>
 
       <v-card-actions class="teal darken overflow-hidden">
          <v-list-tile class="grow">

@@ -13,7 +13,7 @@ import Header from '@/components/template/Header.vue';
 import Menu from '@/components/template/Menu.vue';
 import Content from '@/components/template/Content.vue';
 import Footer from '@/components/template/Footer.vue';
-import Loading from '@/components/views/Loading.vue';
+import Loading from '@/components/Loading.vue';
 
 import { userKey } from '@/constants.js';
 
