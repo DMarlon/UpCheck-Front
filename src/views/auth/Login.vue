@@ -116,7 +116,7 @@ export default {
                 return
 
             this.loading = true;
-            this.$http.post("login/create", {...this.user})
+            this.$http.post("login", {...this.user})
                 .then(response => {
                     this.loading = false;
                     this.notify.type = "success"
