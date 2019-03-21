@@ -46,7 +46,7 @@ export default {
         }
     },
     methods: {
-        async validateToken() {
+        validateToken() {
             this.validatingToken = true
 
             const userData = JSON.parse(localStorage.getItem(userKey))
@@ -58,17 +58,17 @@ export default {
                 return
             }
 
-            const response = await this.$http.get("token", {userData});
-
-            if (response.status === 200)
-                this.$store.dispatch("template/setUser", userData)
-            else{
-                localStorage.removeItem(userKey)
-                this.$router.push({name: "auth"})
-            }
-
-            this.validatingToken = false;
-
+            this.$http.get("token", {userData})
+            .then(response => {
+                if (response.status === 200)
+                    this.$store.dispatch("template/setUser", userData)
+                    this.validatingToken = false;
+            })
+            .catch(error => {
+                    localStorage.removeItem(userKey)
+                    this.$router.push({name: "auth"})
+                    this.validatingToken = false;
+            });
         }
     }
 }
