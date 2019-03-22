@@ -1,7 +1,7 @@
 <template>
     <v-toolbar :clipped-left="true" app >
         <v-toolbar-side-icon v-if="isMenuVisible" v-on:click.stop="showMenu()"/>
-        <v-toolbar-title class="font-weight-black"><strong class="teal--text ">UP</strong><span class="white--text header-title-upcheck">CHECK</span></v-toolbar-title>
+        <v-toolbar-title class="font-weight-black"><strong class="primary--text">UP</strong><span class="white--text header-title-upcheck">CHECK</span></v-toolbar-title>
         <v-spacer></v-spacer>
         <UserMenu />
     </v-toolbar>
@@ -30,8 +30,7 @@ export default {
 
 <style>
     .header-title-upcheck{
-          text-shadow:
-                    1px 1px 1px #000;
-
+        text-shadow:
+            1px 1px 1px #000;
     }
 </style>

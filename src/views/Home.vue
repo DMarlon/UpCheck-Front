@@ -7,7 +7,7 @@
         </v-layout>
         <v-layout row>
             <v-tooltip left>
-                <v-btn color="teal darken" fab dark fixed bottom right slot="activator">
+                <v-btn color="primary darken" fab dark fixed bottom right slot="activator">
                     <v-icon>add</v-icon>
                 </v-btn>
                 <span>Adicionar novo Checklist!</span>
@@ -212,5 +212,4 @@ export default {
 </script>
 
 <style>
-
 </style>

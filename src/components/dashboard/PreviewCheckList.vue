@@ -1,15 +1,15 @@
 <template>
-   <v-card hover class="fill-height overflow-hidden" color="white--text" dark v-bind:to="infos.to">
-      <v-card-title class="teal darken">
+   <v-card hover class="fill-height overflow-hidden" dark v-bind:to="infos.to">
+      <v-card-title class="primary darken">
          <span class="title text-truncate">
             <v-icon large left>check_circle_outline</v-icon>
             <span>{{ infos.title }}</span>
          </span>
       </v-card-title>
 
-      <v-card-text class=" headline font-weight-bold teal darken-2">{{ infos.resume }}</v-card-text>
+      <v-card-text class=" headline font-weight-bold primary darken-2">{{ infos.resume }}</v-card-text>
 
-      <v-card-actions class="teal darken overflow-hidden">
+      <v-card-actions class="primary darken overflow-hidden">
          <v-list-tile class="grow">
             <v-list-tile-avatar>
                <Gravatar v-bind:email="infos.userEmail" alt="User"/>
@@ -32,15 +32,14 @@
 import Gravatar from 'vue-gravatar';
 
 export default {
-    components: {
-        Gravatar
-    },
-    props: {
-        infos: {type: Object, required: true}
-    }
+   components: {
+      Gravatar
+   },
+   props: {
+      infos: {type: Object, required: true}
+   }
 }
 </script>
 
 <style>
-
 </style>
