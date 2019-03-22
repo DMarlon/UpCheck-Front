@@ -32,7 +32,6 @@ export default {
         }
     },
     created() {
-        //RegExp("\/activation\/[0-9a-f]{40}").test(window.location.pathname)
         let urlPath = window.location.pathname.split("/")
         if (urlPath.length == 3 && urlPath[1]=="activation" && RegExp("[0-9a-f]{40}").test(urlPath[2])){
             this.validatingToken = false;
@@ -47,7 +46,7 @@ export default {
         }
     },
     methods: {
-        async validateToken() {
+        validateToken() {
             this.validatingToken = true
 
             const userData = JSON.parse(localStorage.getItem(userKey))
@@ -59,17 +58,17 @@ export default {
                 return
             }
 
-            const response = await this.$http.get("token", {userData});
-
-            if (response.status === 200)
-                this.$store.dispatch("template/setUser", userData)
-            else{
-                localStorage.removeItem(userKey)
-                this.$router.push({name: "auth"})
-            }
-
-            this.validatingToken = false;
-
+            this.$http.get("token", {userData})
+            .then(response => {
+                if (response.status === 200)
+                    this.$store.dispatch("template/setUser", userData)
+                    this.validatingToken = false;
+            })
+            .catch(error => {
+                    localStorage.removeItem(userKey)
+                    this.$router.push({name: "auth"})
+                    this.validatingToken = false;
+            });
         }
     }
 }

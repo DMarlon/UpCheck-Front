@@ -30,6 +30,11 @@ const router = new Router({
 			component: Home,
 		},
 		{
+			path: '/teams',
+			name: 'teams',
+			component: () => import(/* webpackChunkName: "Teams" */ '@/views/team/Teams.vue')
+		},
+		{
 			path: '/about',
 			name: 'about',
 			// route level code-splitting

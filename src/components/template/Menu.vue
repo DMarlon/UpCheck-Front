@@ -19,6 +19,7 @@ export default {
     data () {
         return {
             items: [
+                { title: 'Time', icon: 'layers', to: {name: 'teams'} },
                 { title: 'Home', icon: 'dashboard', to: {name: 'home'} },
                 { title: 'About', icon: 'question_answer', to: {name: 'about'} }
             ]

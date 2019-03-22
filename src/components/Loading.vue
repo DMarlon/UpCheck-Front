@@ -1,8 +1,9 @@
 <template>
     <v-content >
         <v-container fluid fill-height>
-            <v-layout align-center justify-center>
-                <v-img v-bind:max-height="80" v-bind:max-width="80" v-bind:src="require('@/assets/loading.gif')"/>
+            <v-layout column align-center justify-center>
+                <v-progress-circular :size="90" :width="7" color="teal darken-2" indeterminate />
+                <span class="mt-4 font-weight-bold headline">{{ text }}</span>
             </v-layout>
         </v-container>
     </v-content>
@@ -10,8 +11,10 @@
 
 <script>
 export default {
-    name: "Loading"
-
+    name: "Loading",
+    props: {
+        text: {type: String, default: "Aguarde..."},
+    }
 }
 </script>
 
