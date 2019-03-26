@@ -62,13 +62,12 @@ export default {
             .then(response => {
                 if (response.status === 200)
                     this.$store.dispatch("template/setUser", userData)
-                    this.validatingToken = false;
             })
             .catch(error => {
                     localStorage.removeItem(userKey)
                     this.$router.push({name: "auth"})
-                    this.validatingToken = false;
-            });
+            })
+            .finally(() => {this.validatingToken = false;});
         }
     }
 }

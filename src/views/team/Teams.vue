@@ -9,7 +9,7 @@
                     </v-card>
                     <v-layout row wrap class="ma-1">
                         <v-flex xs12 sm6 md4 v-for="item in myTeams" v-bind:key="item.title">
-                            <PreviewTeamList v-bind:team="item" />
+                            <PreviewTeamList v-bind:team="item" v-on:settingsClick="openSettings($event)"/>
                         </v-flex>
                     </v-layout>
                 </v-card>
@@ -31,8 +31,16 @@
             </v-flex>
         </v-layout>
 
+        <FullScreenDialogEditor v-bind:dialog="dialogEditTeam.showDialog" v-bind:config="dialogEditTeam.configDialogEditTeam" v-on:close="closeDialogEditTeam($event)">
+            <v-content >
+                <v-container fluid fill-height>
+                    <Team :team_hash="dialogEditTeam.editTeam.hash"/>
+                </v-container>
+            </v-content>
+        </FullScreenDialogEditor>
+
         <v-layout row>
-            <v-dialog v-model="showDialog" persistent max-width="600px">
+            <v-dialog v-model="dialogCreateTeam.showDialog" persistent max-width="600px">
                 <template v-slot:activator="{ on }">
                     <v-tooltip left>
                     <v-btn v-on="on" fab dark fixed bottom right slot="activator" color="teal darken">
@@ -49,19 +57,19 @@
                     <v-card-text>
                         <v-layout  wrap>
                             <v-flex>
-                                <v-text-field v-bind:disabled="savingTeam" v-model="dialogTeam.name" label="Nome do time"/>
+                                <v-text-field v-bind:disabled="savingTeam" v-model="dialogCreateTeam.name" label="Nome do time"/>
                             </v-flex>
                         </v-layout>
                     </v-card-text>
                     <v-card-actions>
                         <v-layout row wrap>
                             <v-flex xs12>
-                                <v-alert :value="dialogTeam.notify.show" :type="dialogTeam.notify.type">{{ dialogTeam.notify.message }}</v-alert>
+                                <v-alert :value="dialogCreateTeam.notify.show" :type="dialogCreateTeam.notify.type">{{ dialogCreateTeam.notify.message }}</v-alert>
                                 <v-progress-linear v-show="savingTeam" color="teal darken-1" v-bind:indeterminate="true"/>
                                 <v-layout column align-end>
                                     <div>
                                         <v-btn v-bind:disabled="savingTeam" flat @click="createTeam()" color="teal darken">Salvar</v-btn>
-                                        <v-btn v-bind:disabled="savingTeam" flat @click="()=>{showDialog = false; cleanDialogTeam()}" color="teal darken">Cancelar</v-btn>
+                                        <v-btn v-bind:disabled="savingTeam" flat @click="()=>{dialogCreateTeam.showDialog = false; cleanDialogCreateTeam()}" color="teal darken">Cancelar</v-btn>
                                     </div>
                                 </v-layout>
                             </v-flex>
@@ -74,13 +82,17 @@
 </template>
 
 <script>
+import Team from "@/views/team/Team.vue"
 import Loading from "@/components/Loading.vue"
 import PreviewTeamList from "@/components/team/PreviewTeamList.vue"
-import { setTimeout } from 'timers';
+import FullScreenDialogEditor from "@/components/FullScreenDialogEditor.vue"
+
 export default {
     components: {
         Loading,
-        PreviewTeamList
+        PreviewTeamList,
+        FullScreenDialogEditor,
+        Team
     },
     created(){
         this.getTeams();
@@ -88,37 +100,48 @@ export default {
     data(){
         return {
             loadingText: "Carregando informações dos times, aguarde...",
-            showDialog: false,
             savingTeam: false,
             gettingInformations: true,
             myTeams: [],
             participantTeams: [],
-            dialogTeam: {
+            dialogCreateTeam: {
+                showDialog: false,
                 name: "",
                 notify: {
                     type: "error",
                     message: "",
                     show: false
                 },
+            },
+            dialogEditTeam: {
+                showDialog: false,
+                editTeam: {hash: ""},
+                configDialogEditTeam: {
+                    haveActivation: false,
+                    openButtomText: "Abrir",
+                    openButtomIcon: "settings",
+                    haveButton: false,
+                    buttonText: ""
+                },
             }
         }
     },
     methods: {
-        async getTeams() {
+        getTeams() {
             this.gettingInformations = true
 
             this.myTeams = [];
-            this.participantTeams = [];
+            this.participantTeamsparticipantTeams = [];
 
-            const response = await this.$http.get("teams")
+            this.$http.get("teams")
             .then(response => {
                 if (response.data.data && response.data.data.myTeams && Array.isArray(response.data.data.myTeams)){
                     this.myTeams = response.data.data.myTeams.map(item => {
                         return { name: item.name,
                                  userEmail: this.$store.getters["template/userEmail"],
                                  userName: this.$store.getters["template/userFirstName"] + " " + this.$store.getters["template/userLastName"],
-                                 settings: true,
-                                 settingsRoute: {name: 'home'},
+                                 hash: item.hash,
+                                 hasSettings: true,
                                  to: {name: 'about'}
                                 }
                     });
@@ -138,35 +161,46 @@ export default {
 
             })
             .catch(error => {
-                    console.log("ver o que fazer")
+                console.log("ver o que fazer")
+            })
+            .finally(() => {
+                this.gettingInformations = false;
             });
-
-            this.gettingInformations = false;
         },
-        async createTeam() {
+        createTeam() {
             this.savingTeam = true
-            let teamName = this.dialogTeam.name
+            let teamName = this.dialogCreateTeam.name
 
-            const response = await this.$http.post("teams", {name: teamName})
-            .then(response => {
-                this.savingTeam = false
-                this.showDialog = false
-                this.cleanDialogTeam()
+            this.$http.post("teams", {name: teamName})
+            .then(() => {
+                this.cleanDialogCreateTeam()
                 this.getTeams()
-
             })
             .catch(error => {
+                this.dialogCreateTeam.notify.type = "error"
+                this.dialogCreateTeam.notify.message = error.response.data.message
+                this.dialogCreateTeam.notify.show = true
+            })
+            .finally(()=>{
                 this.savingTeam = false
-                this.dialogTeam.notify.type = "error"
-                this.dialogTeam.notify.message = error.response.data.message
-                this.dialogTeam.notify.show = true
             });
         },
-        cleanDialogTeam() {
-            this.dialogTeam.name = "";
-            this.dialogTeam.notify.type="error"
-            this.dialogTeam.notify.message = ""
-            this.dialogTeam.notify.show = false
+        cleanDialogCreateTeam() {
+            this.dialogCreateTeam.showDialog = false;
+            this.dialogCreateTeam.name = "";
+            this.dialogCreateTeam.notify.type="error"
+            this.dialogCreateTeam.notify.message = ""
+            this.dialogCreateTeam.notify.show = false
+        },
+        openSettings(team) {
+            this.dialogEditTeam.editTeam = team;
+            this.dialogEditTeam.showDialog = true;
+
+        },
+        closeDialogEditTeam(closed){
+            this.dialogEditTeam.showDialog = !closed
+            this.dialogEditTeam.editTeam = {hash: ""},
+            this.getTeams();
         }
     }
 }
