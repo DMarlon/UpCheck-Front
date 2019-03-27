@@ -1,42 +1,43 @@
 <template>
     <Loading v-if="gettingInformations" v-bind:text="loadingText" />
     <v-container v-else>
-        <v-card>
-            <v-card dark color="teal darken-2 font-weight-bold headline white--text" class="ml-4 mr-4" style="top: -24px; margin-bottom: -24px;">
-                <v-card-title>
-                    <span>Time {{ team.name }}</span>
-                    <v-spacer/>
-                    <v-btn v-bind:disabled="waitRequest" v-on:click="deleteTeam()" flat class="mr-0">
-                        <v-icon>delete_forever</v-icon>
-                    </v-btn>
-                </v-card-title>
-            </v-card>
+        <EditorCard v-bind:title="`Time ${team.name} `" v-bind:hasActions="true">
+            <template v-slot:headAction>
+                <v-btn dark v-bind:disabled="waitRequest" v-on:click="deleteTeam()" flat class="mr-0">
+                    <v-icon>delete_forever</v-icon>
+                </v-btn>
+            </template>
 
-            <v-container>
-                <v-text-field v-model="team.name" v-bind:disabled="waitRequest" prepend-icon="bookmark" label="Nome do time"/>
-                <v-text-field v-model="team.owner" v-bind:disabled="waitRequest" prepend-icon="alternate_email" label="Responsavel pelo time"/>
-                <v-alert :value="notify.show" :type="notify.type">{{ notify.message }}</v-alert>
-                <v-progress-linear v-show="waitRequest" color="teal darken-1" v-bind:indeterminate="true"/>
-            </v-container>
+            <template v-slot:body>
+                <v-container>
+                    <v-text-field v-model="team.name" v-bind:disabled="waitRequest" prepend-icon="bookmark" label="Nome do time"/>
+                    <v-text-field v-model="team.owner" v-bind:disabled="waitRequest" prepend-icon="alternate_email" label="Responsavel pelo time"/>
+                    <v-alert :value="notify.show" :type="notify.type">{{ notify.message }}</v-alert>
+                    <v-progress-linear v-show="waitRequest" color="teal darken-1" v-bind:indeterminate="true"/>
+                </v-container>
+            </template>
 
-            <v-card-actions>
+            <template v-slot:actions>
                 <v-switch v-model="team.status_toggle" v-bind:disabled="waitRequest" :label="team.status.text" v-on:change="changeStatus($event)" class="ml-3" color="teal darken-1"/>
                 <v-spacer/>
                 <v-btn v-bind:disabled="waitRequest" v-on:click="saveTeam()" color="primary" flat>Salvar</v-btn>
                 <v-btn v-bind:disabled="waitRequest" v-on:click="()=>{cleanNotify(); getTeam()}" color="primary" flat>Cancelar</v-btn>
-            </v-card-actions>
-        </v-card>
+            </template>
+        </EditorCard>
+
     </v-container>
 </template>
 
 <script>
 import Loading from "@/components/Loading.vue"
-import {statusArray } from "@/constants.js"
+import EditorCard from "@/components/EditorCard.vue"
 
+import {statusArray } from "@/constants.js"
 
 export default {
     components: {
         Loading,
+        EditorCard,
     },
     props: {
         team_hash: {type: String, required: true}

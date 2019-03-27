@@ -1,33 +1,31 @@
 <template>
     <Loading v-if="gettingInformations" v-bind:text="loadingText" />
     <v-container v-else grid-list-xl>
-        <v-layout  column wrap>
-            <v-flex xs12 sm12 md12>
-                <v-card>
-                    <v-card color="teal darken-2 font-weight-bold headline white--text" class="ml-4 mr-4" style="top: -24px; margin-bottom: -24px;">
-                        <v-card-title><span>Meus times</span></v-card-title>
-                    </v-card>
-                    <v-layout row wrap class="ma-1">
-                        <v-flex xs12 sm6 md4 v-for="item in myTeams" v-bind:key="item.title">
-                            <PreviewTeamList v-bind:team="item" v-on:settingsClick="openSettings($event)"/>
-                        </v-flex>
-                    </v-layout>
-                </v-card>
+        <v-layout>
+            <v-flex>
+                <EditorCard v-bind:title="'Meus times'" v-bind:hasSearch="true" v-on:searchKeyUpEnterPress="testeSearch($event)">
+                    <template v-slot:body>
+                        <v-layout row wrap class="ma-1" >
+                            <v-flex xs12 sm6 md4 v-for="item in myTeams" v-bind:key="item.title">
+                                <PreviewTeamList v-bind:team="item" v-on:settingsClick="openSettings($event)"/>
+                            </v-flex>
+                        </v-layout>
+                    </template>
+                </EditorCard>
             </v-flex>
         </v-layout>
 
         <v-layout column wrap class="mt-4">
-            <v-flex xs12 sm12 md12>
-                <v-card>
-                    <v-card color="teal darken-2 font-weight-bold headline white--text" class="ml-4 mr-4" style="top: -24px; margin-bottom: -24px;">
-                        <v-card-title><span>Times participantes</span></v-card-title>
-                    </v-card>
-                    <v-layout row wrap class="ma-1">
-                        <v-flex xs12 sm6 md4 v-for="item in participantTeams" v-bind:key="item.title">
-                            <PreviewTeamList v-bind:team="item" />
-                        </v-flex>
-                    </v-layout>
-                </v-card>
+            <v-flex>
+                <EditorCard v-bind:title="'Meus times'">
+                        <template v-slot:body>
+                            <v-layout row wrap class="ma-1">
+                                <v-flex xs12 sm6 md4 v-for="item in participantTeams" v-bind:key="item.title">
+                                    <PreviewTeamList v-bind:team="item" />
+                                </v-flex>
+                            </v-layout>
+                        </template>
+                </EditorCard>
             </v-flex>
         </v-layout>
 
@@ -84,15 +82,17 @@
 <script>
 import Team from "@/views/team/Team.vue"
 import Loading from "@/components/Loading.vue"
+import EditorCard from "@/components/EditorCard.vue"
 import PreviewTeamList from "@/components/team/PreviewTeamList.vue"
 import FullScreenDialogEditor from "@/components/FullScreenDialogEditor.vue"
 
 export default {
     components: {
+        Team,
         Loading,
+        EditorCard,
         PreviewTeamList,
-        FullScreenDialogEditor,
-        Team
+        FullScreenDialogEditor
     },
     created(){
         this.getTeams();
@@ -100,6 +100,7 @@ export default {
     data(){
         return {
             loadingText: "Carregando informações dos times, aguarde...",
+            expand: false,
             savingTeam: false,
             gettingInformations: true,
             myTeams: [],
@@ -201,6 +202,9 @@ export default {
             this.dialogEditTeam.showDialog = !closed
             this.dialogEditTeam.editTeam = {hash: ""},
             this.getTeams();
+        },
+        testeSearch(text) {
+            alert("pesquisando por: "+text);
         }
     }
 }

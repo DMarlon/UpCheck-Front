@@ -5,7 +5,7 @@
 			{{ team.name }}
 		</v-card-text>
 
-		<v-card-actions class="overflow-hidden">
+		<v-card-actions>
 			<v-list-tile class="grow">
 				<v-list-tile-avatar>
 					<Gravatar v-bind:email="team.userEmail" alt="User"/>
