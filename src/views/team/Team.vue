@@ -1,7 +1,7 @@
 <template>
     <Loading v-if="gettingInformations" v-bind:text="loadingText" />
     <v-container v-else>
-        <EditorCard v-bind:title="`Time ${team.name} `" v-bind:hasActions="true">
+        <EditorCard v-bind:title="`Time ${team.name} `">
             <template v-slot:headAction>
                 <v-btn dark v-bind:disabled="waitRequest" v-on:click="deleteTeam()" flat class="mr-0">
                     <v-icon>delete_forever</v-icon>
@@ -32,7 +32,7 @@
 import Loading from "@/components/Loading.vue"
 import EditorCard from "@/components/EditorCard.vue"
 
-import {statusArray } from "@/constants.js"
+import {statusOptions } from "@/constants.js"
 
 export default {
     components: {
@@ -52,7 +52,7 @@ export default {
                     owner: "",
                     hash: "",
                     status_toggle: false,
-                    status: statusArray[0]
+                    status: statusOptions[0]
                 },
             notify: {
                     type: "error",
@@ -63,8 +63,10 @@ export default {
     },
     watch: {
         team_hash(hash) {
-            if (hash && hash != "")
+            if (hash && hash != "") {
                 this.getTeam(hash);
+                this.cleanNotify();
+            }
         },
     },
     methods: {
@@ -78,8 +80,8 @@ export default {
                         name: response.data.data.name,
                         owner: this.$store.getters["template/userEmail"],
                         hash: response.data.data.hash,
-                        status: statusArray[response.data.data.status],
-                        status_toggle: statusArray[response.data.data.status].value == 1
+                        status: statusOptions[response.data.data.status-1],
+                        status_toggle: statusOptions[response.data.data.status-1].value == 2
                     }
                 }
             })
@@ -137,7 +139,7 @@ export default {
             });
         },
         changeStatus(valor) {
-            this.team.status = valor ? statusArray[1] : statusArray[0]
+            this.team.status = valor ? statusOptions[1] : statusOptions[0]
         },
         cleanTeam() {
             this.team = {
@@ -145,7 +147,7 @@ export default {
                         owner: "",
                         hash: "",
                         status_toggle: false,
-                        status: statusArray[0]
+                        status: statusOptions[0]
                     }
         },
         cleanNotify() {

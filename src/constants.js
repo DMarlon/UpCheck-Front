@@ -1,5 +1,5 @@
 export const userKey = "__upcheck_user_token";
 export const userTheme = "__upcheck_user_theme";
-export const statusArray =  [{"text": "Inativo", "value": 0}, {"text": "Ativo", "value": 1}];
+export const statusOptions =  [{"text": "Inativo", "value": 1}, {"text": "Ativo", "value": 2}];
 
-export default {userKey, userTheme, statusArray}
+export default {userKey, userTheme, statusOptions}

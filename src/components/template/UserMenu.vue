@@ -1,39 +1,39 @@
 <template>
     <v-menu v-if="isMenuVisible" v-bind:close-on-content-click="false" v-bind:nudge-width="200" offset-x>
-            <v-btn icon slot="activator">
-                <v-icon>drag_indicator</v-icon>
-            </v-btn>
-            <v-card>
-                <v-list>
-                    <v-list-tile avatar>
-                        <v-list-tile-avatar>
-                            <Gravatar v-bind:email="userEmail" alt="User"/>
-                        </v-list-tile-avatar>
-                        <v-list-tile-content>
-                            <v-list-tile-title>{{ userFirstName }}</v-list-tile-title>
-                            <v-list-tile-sub-title>{{ userLastName }}</v-list-tile-sub-title>
-                        </v-list-tile-content>
-                    </v-list-tile>
-                </v-list>
-                <v-divider></v-divider>
-                <v-list>
-                    <v-list-tile>
-                        <v-list-tile-action>
-                            <v-switch v-model="dark" color="teal darken-1"></v-switch>
-                        </v-list-tile-action>
-                        <v-list-tile-title>Thema</v-list-tile-title>
-                    </v-list-tile>
-                    <v-list-tile active-class="default-class teal darken-1 white--text" v-on:click="logout()">
-                        <v-list-tile-action>
-                            <v-icon>exit_to_app</v-icon>
-                        </v-list-tile-action>
-                        <v-list-tile-content>
-                            <v-list-tile-title>Logout</v-list-tile-title>
-                        </v-list-tile-content>
-                    </v-list-tile>
-                </v-list>
-            </v-card>
-        </v-menu>
+        <v-btn icon slot="activator">
+            <v-icon>drag_indicator</v-icon>
+        </v-btn>
+        <v-card>
+            <v-list>
+                <v-list-tile avatar>
+                    <v-list-tile-avatar>
+                        <Gravatar v-bind:email="userEmail" alt="User"/>
+                    </v-list-tile-avatar>
+                    <v-list-tile-content>
+                        <v-list-tile-title>{{ userFirstName }}</v-list-tile-title>
+                        <v-list-tile-sub-title>{{ userLastName }}</v-list-tile-sub-title>
+                    </v-list-tile-content>
+                </v-list-tile>
+            </v-list>
+            <v-divider></v-divider>
+            <v-list>
+                <v-list-tile>
+                    <v-list-tile-action>
+                        <v-switch v-model="dark" color="teal darken-1"></v-switch>
+                    </v-list-tile-action>
+                    <v-list-tile-title>Thema</v-list-tile-title>
+                </v-list-tile>
+                <v-list-tile active-class="default-class teal darken-1 white--text" v-on:click="logout()">
+                    <v-list-tile-action>
+                        <v-icon>exit_to_app</v-icon>
+                    </v-list-tile-action>
+                    <v-list-tile-content>
+                        <v-list-tile-title>Logout</v-list-tile-title>
+                    </v-list-tile-content>
+                </v-list-tile>
+            </v-list>
+        </v-card>
+    </v-menu>
 </template>
 
 <script>

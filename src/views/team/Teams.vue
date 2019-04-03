@@ -1,15 +1,29 @@
 <template>
-    <Loading v-if="gettingInformations" v-bind:text="loadingText" />
-    <v-container v-else grid-list-xl>
+    <v-container grid-list-xl>
         <v-layout>
             <v-flex>
-                <EditorCard v-bind:title="'Meus times'" v-bind:hasSearch="true" v-on:searchKeyUpEnterPress="testeSearch($event)">
+                <EditorCard title="Meus times">
+                    <template v-slot:headAction>
+                        <ExpansiveSimpleTextSearch
+                            v-model="queryOptions"
+                            v-bind:disabled="searchTeam"
+                            v-bind:searchOptions="myTeamsSearchOptions"
+                            v-on:searchClick="search()"
+                        />
+                    </template>
+
                     <template v-slot:body>
                         <v-layout row wrap class="ma-1" >
                             <v-flex xs12 sm6 md4 v-for="item in myTeams" v-bind:key="item.title">
-                                <PreviewTeamList v-bind:team="item" v-on:settingsClick="openSettings($event)"/>
+                                <PreviewTeamList v-bind:disabled="searchTeam" v-bind:team="item" v-on:settingsClick="openSettings($event)"/>
                             </v-flex>
+                            <v-progress-linear v-show="searchTeam" color="teal darken-1" v-bind:indeterminate="true"/>
                         </v-layout>
+                    </template>
+
+                    <template v-slot:actions v-if="myTeams.length >= 6">
+                        <v-spacer/>
+                        <v-btn color="primary" small flat>Buscar mais</v-btn>
                     </template>
                 </EditorCard>
             </v-flex>
@@ -17,7 +31,7 @@
 
         <v-layout column wrap class="mt-4">
             <v-flex>
-                <EditorCard v-bind:title="'Meus times'">
+                <EditorCard v-bind:title="'Times que participo'">
                         <template v-slot:body>
                             <v-layout row wrap class="ma-1">
                                 <v-flex xs12 sm6 md4 v-for="item in participantTeams" v-bind:key="item.title">
@@ -85,6 +99,9 @@ import Loading from "@/components/Loading.vue"
 import EditorCard from "@/components/EditorCard.vue"
 import PreviewTeamList from "@/components/team/PreviewTeamList.vue"
 import FullScreenDialogEditor from "@/components/FullScreenDialogEditor.vue"
+import ExpansiveSimpleTextSearch from "@/components/search/ExpansiveSimpleTextSearch.vue"
+
+import QueryOptions from "@/models/QueryOptions.js"
 
 export default {
     components: {
@@ -92,19 +109,20 @@ export default {
         Loading,
         EditorCard,
         PreviewTeamList,
-        FullScreenDialogEditor
+        FullScreenDialogEditor,
+        ExpansiveSimpleTextSearch
     },
     created(){
-        this.getTeams();
+        this.getMyTeams();
     },
     data(){
         return {
-            loadingText: "Carregando informações dos times, aguarde...",
-            expand: false,
+            searchTeam: false,
             savingTeam: false,
-            gettingInformations: true,
             myTeams: [],
+            myTeamsSearchOptions: ["Nome", "Status"],
             participantTeams: [],
+            queryOptions: new QueryOptions(),
             dialogCreateTeam: {
                 showDialog: false,
                 name: "",
@@ -128,16 +146,16 @@ export default {
         }
     },
     methods: {
-        getTeams() {
-            this.gettingInformations = true
+        getMyTeams() {
+            this.searchTeam = true
 
             this.myTeams = [];
-            this.participantTeamsparticipantTeams = [];
+            let urlSearch = "teams/my"+this.queryOptions.toURLParams();
 
-            this.$http.get("teams")
+            this.$http.get(urlSearch)
             .then(response => {
-                if (response.data.data && response.data.data.myTeams && Array.isArray(response.data.data.myTeams)){
-                    this.myTeams = response.data.data.myTeams.map(item => {
+                if (response.data.data && response.data.data.teams && Array.isArray(response.data.data.teams)) {
+                    this.myTeams = response.data.data.teams.map(item => {
                         return { name: item.name,
                                  userEmail: this.$store.getters["template/userEmail"],
                                  userName: this.$store.getters["template/userFirstName"] + " " + this.$store.getters["template/userLastName"],
@@ -147,25 +165,12 @@ export default {
                                 }
                     });
                 }
-
-                if (response.data && response.data.data.participantTeams && Array.isArray(response.data.data.participantTeams)){
-                    this.participantTeams = response.data.data.participantTeams.map(item => {
-                        return { name: item.name,
-                                 userEmail: this.$store.getters["template/userEmail"],
-                                 userName: this.$store.getters["template/userFirstName"] + " " + this.$store.getters["template/userLastName"],
-                                 settings: true,
-                                 settingsRoute: {name: 'home'},
-                                 to: {name: 'about'}
-                                }
-                    });
-                }
-
             })
             .catch(error => {
                 console.log("ver o que fazer")
             })
             .finally(() => {
-                this.gettingInformations = false;
+                this.searchTeam = false;
             });
         },
         createTeam() {
@@ -175,7 +180,7 @@ export default {
             this.$http.post("teams", {name: teamName})
             .then(() => {
                 this.cleanDialogCreateTeam()
-                this.getTeams()
+                this.getMyTeams()
             })
             .catch(error => {
                 this.dialogCreateTeam.notify.type = "error"
@@ -201,10 +206,10 @@ export default {
         closeDialogEditTeam(closed){
             this.dialogEditTeam.showDialog = !closed
             this.dialogEditTeam.editTeam = {hash: ""},
-            this.getTeams();
+            this.getMyTeams();
         },
-        testeSearch(text) {
-            alert("pesquisando por: "+text);
+        search() {
+            this.getMyTeams();
         }
     }
 }
