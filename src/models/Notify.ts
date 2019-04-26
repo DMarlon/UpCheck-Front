@@ -1,23 +1,23 @@
 export default class Notify {
 
-    private _type: String;
+    private _kind: String;
     private _message: String;
     private _show: Boolean;
 
-    constructor(type: String="", message: String="", show: Boolean=false) {
-        this._type = name;
+    constructor(kind: String="", message: String="", show: Boolean=false) {
+        this._kind = kind;
         this._message = message;
         this._show = show;
     }
 
-    get type(): String
+    get kind(): String
     {
-        return this._type;
+        return this._kind;
     }
 
-    set type(type: String)
+    set kind(kind: String)
     {
-        this._type = type;
+        this._kind = kind;
     }
 
     get message(): String
