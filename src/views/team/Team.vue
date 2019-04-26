@@ -1,7 +1,7 @@
 <template>
     <Loading v-if="gettingInformations" v-bind:text="loadingText" />
     <v-container v-else>
-        <EditorCard v-bind:title="`Time ${team.name} `">
+        <EditorCard v-bind:title="`Time ${team.name}`">
             <template v-slot:headAction>
                 <v-btn dark v-bind:disabled="waitRequest" v-on:click="deleteTeam()" flat class="mr-0">
                     <v-icon>delete_forever</v-icon>
@@ -33,8 +33,8 @@ import Loading from "@/components/Loading.vue"
 import EditorCard from "@/components/EditorCard.vue"
 
 import Notify from "@/models/Notify.ts"
-import TeamDomain from "@/domains/team/Team.ts"
 import TeamModel from "@/models/team/TeamModel.ts"
+import TeamDomain from "@/domains/team/TeamDomain.ts"
 import {statusOptions } from "@/constants.ts"
 
 export default {

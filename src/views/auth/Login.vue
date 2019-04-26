@@ -35,9 +35,9 @@
 </template>
 
 <script>
-import Auth from "@/domains/auth/Auth.ts"
 import Notify from "@/models/Notify.ts"
 import { userKey } from '@/constants.ts';
+import AuthDomain from "@/domains/auth/AuthDomain.ts"
 
 export default {
     name: "Login",
@@ -94,7 +94,7 @@ export default {
 
             this.loading = true;
 
-            let auth = new Auth();
+            let auth = new AuthDomain();
             try{
 
                 let user = await auth.login(this.user.email, this.user.password);
@@ -116,7 +116,7 @@ export default {
 
             this.loading = true;
 
-            let auth = new Auth();
+            let auth = new AuthDomain();
             let response;
             try {
                 response = await auth.register(this.user);
@@ -132,7 +132,7 @@ export default {
         async accountActivation(token) {
             this.loading = true;
 
-            let auth = new Auth();
+            let auth = new AuthDomain();
             let response;
             try {
                 response = await auth.activation(token);

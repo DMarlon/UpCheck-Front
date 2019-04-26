@@ -1,3 +1,5 @@
+import { AxiosResponse } from 'axios';
+
 export default class ResponseModel {
     private _code: Number;
     private _status: String;
@@ -39,13 +41,15 @@ export default class ResponseModel {
         this._message = message;
     }
 
-    public factoryStandartResponse(response: Response | null): void
+    public standardResponse(response: AxiosResponse): ResponseModel
     {
-        if (response && response.data) {
+        if (response.data) {
             this._code = response.status;
             this._status = response.data.status;
             this._message = response.data.message;
         }
+
+        return this;
     }
 
 }
