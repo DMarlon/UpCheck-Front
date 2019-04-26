@@ -4,7 +4,7 @@ import TeamModel from "@/models/team/TeamModel.ts"
 import QueryOptions from "@/models/QueryOptions.ts"
 import ResponseModel from "@/models/ResponseModel.ts"
 
-export default class Team {
+export default class TeamDomain {
 
     public create(name: String): any
     {

@@ -33,7 +33,7 @@ import Loading from "@/components/Loading.vue"
 import EditorCard from "@/components/EditorCard.vue"
 
 import Notify from "@/models/Notify.ts"
-import TeamDomain from "@/domains/team/Team.ts"
+import TeamDomain from "@/domains/team/TeamDomain.ts"
 import TeamModel from "@/models/team/TeamModel.ts"
 import {statusOptions } from "@/constants.ts"
 

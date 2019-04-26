@@ -101,7 +101,7 @@ import FullScreenDialogEditor from "@/components/FullScreenDialogEditor.vue"
 import ExpansiveSimpleTextSearch from "@/components/search/ExpansiveSimpleTextSearch.vue"
 
 import Notify from "@/models/Notify.ts"
-import TeamDomain from "@/domains/team/Team.ts"
+import TeamDomain from "@/domains/team/TeamDomain.ts"
 import QueryOptions from "@/models/QueryOptions.ts"
 
 export default {
