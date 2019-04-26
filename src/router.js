@@ -5,7 +5,7 @@ import Login from '@/views/auth/Login.vue'
 
 Vue.use(Router)
 
-import { userKey } from '@/constants.js'
+import { userKey } from '@/constants.ts'
 
 const router = new Router({
 	mode: 'history',

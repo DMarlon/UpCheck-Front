@@ -15,7 +15,7 @@ import Content from '@/components/template/Content.vue';
 import Footer from '@/components/template/Footer.vue';
 import Loading from '@/components/Loading.vue';
 
-import { userKey } from '@/constants.js';
+import { userKey } from '@/constants.ts';
 
 export default {
     name: 'App',
@@ -63,11 +63,13 @@ export default {
                 if (response.status === 200)
                     this.$store.dispatch("template/setUser", userData)
             })
-            .catch(error => {
-                    localStorage.removeItem(userKey)
-                    this.$router.push({name: "auth"})
+            .catch(() => {
+                localStorage.removeItem(userKey)
+                this.$router.push({name: "auth"})
             })
-            .finally(() => {this.validatingToken = false;});
+            .finally(() => {
+                this.validatingToken = false;
+            });
         }
     }
 }

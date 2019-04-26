@@ -31,7 +31,7 @@
 
         <v-layout column wrap class="mt-4">
             <v-flex>
-                <EditorCard v-bind:title="'Times que participo'">
+                <EditorCard title="Times que participo">
                         <template v-slot:body>
                             <v-layout row wrap class="ma-1">
                                 <v-flex xs12 sm6 md4 v-for="item in participantTeams" v-bind:key="item.title">
@@ -95,18 +95,18 @@
 
 <script>
 import Team from "@/views/team/Team.vue"
-import Loading from "@/components/Loading.vue"
 import EditorCard from "@/components/EditorCard.vue"
 import PreviewTeamList from "@/components/team/PreviewTeamList.vue"
 import FullScreenDialogEditor from "@/components/FullScreenDialogEditor.vue"
 import ExpansiveSimpleTextSearch from "@/components/search/ExpansiveSimpleTextSearch.vue"
 
-import QueryOptions from "@/models/QueryOptions.js"
+import Notify from "@/models/Notify.ts"
+import TeamDomain from "@/domains/team/Team.ts"
+import QueryOptions from "@/models/QueryOptions.ts"
 
 export default {
     components: {
         Team,
-        Loading,
         EditorCard,
         PreviewTeamList,
         FullScreenDialogEditor,
@@ -126,11 +126,7 @@ export default {
             dialogCreateTeam: {
                 showDialog: false,
                 name: "",
-                notify: {
-                    type: "error",
-                    message: "",
-                    show: false
-                },
+                notify: new Notify()
             },
             dialogEditTeam: {
                 showDialog: false,
@@ -146,57 +142,41 @@ export default {
         }
     },
     methods: {
-        getMyTeams() {
+        async getMyTeams() {
             this.searchTeam = true
-
             this.myTeams = [];
-            let urlSearch = "teams/my"+this.queryOptions.toURLParams();
 
-            this.$http.get(urlSearch)
-            .then(response => {
-                if (response.data.data && response.data.data.teams && Array.isArray(response.data.data.teams)) {
-                    this.myTeams = response.data.data.teams.map(item => {
-                        return { name: item.name,
-                                 userEmail: this.$store.getters["template/userEmail"],
-                                 userName: this.$store.getters["template/userFirstName"] + " " + this.$store.getters["template/userLastName"],
-                                 hash: item.hash,
-                                 hasSettings: true,
-                                 to: {name: 'about'}
-                                }
-                    });
-                }
-            })
-            .catch(error => {
-                console.log("ver o que fazer")
-            })
-            .finally(() => {
-                this.searchTeam = false;
-            });
+            let team = new TeamDomain();
+            try {
+                this.myTeams = await team.search(this.queryOptions);
+            } catch (error) {
+                console.log("ver o que fazer", error);
+            }
+
+            this.searchTeam = false;
+
         },
-        createTeam() {
+        async createTeam() {
             this.savingTeam = true
-            let teamName = this.dialogCreateTeam.name
 
-            this.$http.post("teams", {name: teamName})
-            .then(() => {
+            let team = new TeamDomain();
+            try {
+                await team.create(this.dialogCreateTeam.name);
                 this.cleanDialogCreateTeam()
-                this.getMyTeams()
-            })
-            .catch(error => {
-                this.dialogCreateTeam.notify.type = "error"
-                this.dialogCreateTeam.notify.message = error.response.data.message
+                this.getMyTeams();
+
+            } catch (error) {
+                this.dialogCreateTeam.notify.type = error.status
+                this.dialogCreateTeam.notify.message = error.message
                 this.dialogCreateTeam.notify.show = true
-            })
-            .finally(()=>{
-                this.savingTeam = false
-            });
+            }
+
+            this.savingTeam = false
         },
         cleanDialogCreateTeam() {
-            this.dialogCreateTeam.showDialog = false;
             this.dialogCreateTeam.name = "";
-            this.dialogCreateTeam.notify.type="error"
-            this.dialogCreateTeam.notify.message = ""
-            this.dialogCreateTeam.notify.show = false
+            this.dialogCreateTeam.showDialog = false;
+            this.dialogCreateTeam.notify = new Notify();
         },
         openSettings(team) {
             this.dialogEditTeam.editTeam = team;
@@ -204,8 +184,8 @@ export default {
 
         },
         closeDialogEditTeam(closed){
-            this.dialogEditTeam.showDialog = !closed
             this.dialogEditTeam.editTeam = {hash: ""},
+            this.dialogEditTeam.showDialog = !closed
             this.getMyTeams();
         },
         search() {

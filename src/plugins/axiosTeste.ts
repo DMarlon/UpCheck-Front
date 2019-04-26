@@ -1,4 +1,3 @@
-import Vue from 'vue'
 import axios from 'axios'
 import RoutesAPI from "@/routesAPI.ts"
 import { APILocation } from '@/settings.ts';
@@ -13,9 +12,4 @@ axios.interceptors.response.use(undefined, error => {
     }
 });
 
-Vue.use({
-    install(Vue){
-        Vue.prototype.$http = axios
-        Vue.prototype.$routesAPI = RoutesAPI
-    }
-})
+export default {ajax: axios, routes: RoutesAPI};

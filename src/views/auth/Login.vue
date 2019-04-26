@@ -35,7 +35,9 @@
 </template>
 
 <script>
-import { userKey } from '@/constants.js';
+import Auth from "@/domains/auth/Auth.ts"
+import Notify from "@/models/Notify.ts"
+import { userKey } from '@/constants.ts';
 
 export default {
     name: "Login",
@@ -49,11 +51,7 @@ export default {
                 email: "",
                 password: ""
             },
-            notify: {
-                show: false,
-                type: "error",
-                message: ""
-            },
+            notify: new Notify(),
             showSignup: true,
             loading: false,
         }
@@ -64,89 +62,88 @@ export default {
     },
     computed: {
         nameRules() {
-            const rules = []
+            const rules = [];
             rules.push(v => (v || "").indexOf(" ") > 0 || "Digite o nome completo!");
             return rules;
         },
         emailRules() {
-            const rules = []
+            const rules = [];
             rules.push(v => (v || "") != "" || "E-mail é obrigatorio!");
             rules.push(v =>  /.+@.+\.{1,}.+/.test((v || "")) || "E-mail inválido!");
             return rules;
         },
         passwordConfirm() {
-            const rules = []
+            const rules = [];
             rules.push(v => (!!v && v) === this.user.password || "As senhas não conferem!");
             return rules;
         },
     },
     methods: {
+         showMessage(show, response) {
+            this.notify.show = show;
+            this.notify.type = response.status;
+            this.notify.message = response.message;
+        },
         changeRegister(showSignup) {
-            this.showSignup = showSignup
-            this.notify.show = false
-            this.notify.message = ""
+            this.showSignup = showSignup;
+            this.showMessage(false, {type:"", message: ""});
         },
-        login() {
+        async login() {
             if (!this.$refs.formAuth.validate())
                 return
 
             this.loading = true;
-            this.$http.get("login", {headers: {"Authorization": "Basic " + btoa(this.user.email + ":" + this.user.password)}})
-                .then(response => {
-                    this.loading = false;
-                    this.notify.message = ""
-                    this.notify.show = false
-                    this.resetData()
 
-                    this.$store.dispatch("template/setUser", response.data.user)
-                    localStorage.setItem(userKey, JSON.stringify(response.data.user));
-                    this.$router.push({name: "home"})
-                })
-                .catch(error => {
-                    this.loading = false;
-                    if (error && error.response) {
-                        this.notify.type = "error"
-                        this.notify.message = error.response.data.message
-                        this.notify.show = true
-                    }
-                });
+            let auth = new Auth();
+            try{
+
+                let user = await auth.login(this.user.email, this.user.password);
+                this.resetData();
+
+                this.$store.dispatch("template/setUser", user.toDTO());
+                localStorage.setItem(userKey, JSON.stringify(user.toDTO()));
+                this.$router.push({name: "home"});
+            }
+            catch (error){
+                this.showMessage(true, error);
+            }
+
+            this.loading = false;
         },
-        register() {
+        async register() {
             if (!this.$refs.formAuth.validate())
                 return
 
             this.loading = true;
-            this.$http.post("login", {...this.user})
-                .then(response => {
-                    this.loading = false;
-                    this.notify.type = "success"
-                    this.notify.message = response.data.message
-                    this.notify.show = true
-                    this.showSignup = true;
-                })
-                .catch(error => {
-                    this.loading = false;
-                    this.notify.type = "error"
-                    this.notify.message = error.response.data.message
-                    this.notify.show = true
-                });
+
+            let auth = new Auth();
+            let response;
+            try {
+                response = await auth.register(this.user);
+                this.showSignup = true;
+            }
+            catch (error) {
+                response = error;
+            }
+
+            this.showMessage(true, response);
+            this.loading = false;
         },
-        accountActivation(token) {
+        async accountActivation(token) {
             this.loading = true;
-            this.$http.get("/login/account/activation/" + token)
-                .then(response => {
-                    this.loading = false;
-                    this.notify.type = "success"
-                    this.notify.message = response.data.message
-                    this.notify.show = true
-                    this.showSignup = true;
-                })
-                .catch(error => {
-                    this.loading = false;
-                    this.notify.type = "error"
-                    this.notify.message = error.response.data.message
-                    this.notify.show = true
-                });
+
+            let auth = new Auth();
+            let response;
+            try {
+                response = await auth.activation(token);
+                this.showSignup = true;
+            }
+            catch (error) {
+                response = error;
+            }
+
+            this.showMessage(true, response);
+            this.loading = false;
         },
         resetData() {
             Object.assign(this.$data, this.$options.data.apply(this))

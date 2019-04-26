@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { userKey } from '@/constants.js';
+import { userKey } from '@/constants.ts';
 import Gravatar from 'vue-gravatar';
 
 export default {

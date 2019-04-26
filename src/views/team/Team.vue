@@ -11,14 +11,14 @@
             <template v-slot:body>
                 <v-container>
                     <v-text-field v-model="team.name" v-bind:disabled="waitRequest" prepend-icon="bookmark" label="Nome do time"/>
-                    <v-text-field v-model="team.owner" v-bind:disabled="waitRequest" prepend-icon="alternate_email" label="Responsavel pelo time"/>
+                    <v-text-field v-model="team.user.email" v-bind:disabled="waitRequest" prepend-icon="alternate_email" label="Responsavel pelo time"/>
                     <v-alert :value="notify.show" :type="notify.type">{{ notify.message }}</v-alert>
                     <v-progress-linear v-show="waitRequest" color="teal darken-1" v-bind:indeterminate="true"/>
                 </v-container>
             </template>
 
             <template v-slot:actions>
-                <v-switch v-model="team.status_toggle" v-bind:disabled="waitRequest" :label="team.status.text" v-on:change="changeStatus($event)" class="ml-3" color="teal darken-1"/>
+                <v-switch v-model="status_toggle" v-bind:disabled="waitRequest" :label="team.status.text" v-on:change="changeStatus($event)" class="ml-3 text-capitalize" color="teal darken-1"/>
                 <v-spacer/>
                 <v-btn v-bind:disabled="waitRequest" v-on:click="saveTeam()" color="primary" flat>Salvar</v-btn>
                 <v-btn v-bind:disabled="waitRequest" v-on:click="()=>{cleanNotify(); getTeam()}" color="primary" flat>Cancelar</v-btn>
@@ -32,7 +32,10 @@
 import Loading from "@/components/Loading.vue"
 import EditorCard from "@/components/EditorCard.vue"
 
-import {statusOptions } from "@/constants.js"
+import Notify from "@/models/Notify.ts"
+import TeamDomain from "@/domains/team/Team.ts"
+import TeamModel from "@/models/team/TeamModel.ts"
+import {statusOptions } from "@/constants.ts"
 
 export default {
     components: {
@@ -47,113 +50,78 @@ export default {
             loadingText: "Carregando informações do time, aguarde...",
             waitRequest: false,
             gettingInformations: false,
-            team: {
-                    name: "",
-                    owner: "",
-                    hash: "",
-                    status_toggle: false,
-                    status: statusOptions[0]
-                },
-            notify: {
-                    type: "error",
-                    message: "",
-                    show: false
-                },
+            status_toggle: false,
+            team: new TeamModel(),
+            notify: new Notify(),
         }
     },
     watch: {
         team_hash(hash) {
             if (hash && hash != "") {
                 this.getTeam(hash);
-                this.cleanNotify();
+                this.notify = new Notify();
             }
         },
     },
     methods: {
-        getTeam() {
+        showMessage(show, response) {
+            this.notify.show = show;
+            this.notify.type = response.status;
+            this.notify.message = response.message;
+        },
+        async getTeam() {
             this.gettingInformations = true
 
-            this.$http.get("teams/"+this.team_hash)
-            .then(response => {
-                if (response.data.data && response.data.data){
-                    this.team = {
-                        name: response.data.data.name,
-                        owner: this.$store.getters["template/userEmail"],
-                        hash: response.data.data.hash,
-                        status: statusOptions[response.data.data.status-1],
-                        status_toggle: statusOptions[response.data.data.status-1].value == 2
-                    }
-                }
-            })
-            .catch(error => {
-                this.cleanTeam()
-            })
-            .finally(() => {
-                this.gettingInformations = false
-            });
-        },
-        saveTeam() {
-            let myTeam = {
-                    name: this.team.name,
-                    email: this.team.owner,
-                    status: this.team.status.value,
-                    hash: this.team.hash
-            };
+            let teamDomain = new TeamDomain();
+            try {
+                this.team = await teamDomain.get(this.team_hash);
+                this.status_toggle = this.team.status.value == statusOptions[1].value;
+            }
+            catch (error) {
+                this.cleanTeam();
+            }
 
+            this.gettingInformations = false;
+        },
+        async saveTeam() {
             this.waitRequest = true
 
-            this.$http.put("teams/"+this.team_hash, {...myTeam})
-            .then(response => {
-                this.notify.type = "success"
-                this.notify.message = response.data.message
-                this.notify.show = true
-            })
-            .catch(error => {
-                this.notify.type = "error"
-                this.notify.message = error.response.data.message
-                this.notify.show = true
-            })
-            .finally(() => {
-                this.getTeam()
-                this.waitRequest = false
-            });
+            let response;
+            let teamDomain = new TeamDomain();
+            try {
+                response = await teamDomain.edit(this.team);
+            }
+            catch (error) {
+                response = error;
+            }
+
+            this.showMessage(true, response);
+            this.getTeam()
+            this.waitRequest = false
+
         },
-        deleteTeam(){
+        async deleteTeam(){
             this.waitRequest = true
 
-            this.$http.delete("teams/"+this.team_hash)
-            .then(response => {
-                this.cleanTeam()
-                this.notify.type = "success"
-                this.notify.message = response.data.message
-                this.notify.show = true
-            })
-            .catch(error => {
-                this.getTeam()
-                this.notify.type = "error"
-                this.notify.message = error.response.data.message
-                this.notify.show = true
-            })
-            .finally(() => {
-                this.waitRequest = false
-            });
+            let response;
+            let teamDomain = new TeamDomain();
+            try {
+                response = await teamDomain.delete(this.team.hash);
+                this.cleanTeam();
+            }
+            catch (error) {
+                response = error;
+                this.getTeam();
+            }
+            this.showMessage(true, response);
+            this.waitRequest = false;
         },
         changeStatus(valor) {
             this.team.status = valor ? statusOptions[1] : statusOptions[0]
         },
         cleanTeam() {
-            this.team = {
-                        name: "",
-                        owner: "",
-                        hash: "",
-                        status_toggle: false,
-                        status: statusOptions[0]
-                    }
-        },
-        cleanNotify() {
-            this.notify.type="error"
-            this.notify.message = ""
-            this.notify.show = false
+            this.team = new TeamModel();
+            this.showMessage(false, {type:"", message: ""});
         },
     }
 }

@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import QueryOptions from "@/models/QueryOptions.js"
+import QueryOptions from "@/models/QueryOptions.ts"
 
 
 export default {
@@ -46,7 +46,7 @@ export default {
     props: {
         hasSearchOptionClean: {type: Boolean, default: true},
         searchOptions: {type: Array, default: ()=>[]},
-        queryOptions: {type: Object, default: ()=>new QueryOptions()},
+        queryOptions: {type: QueryOptions, default: ()=>new QueryOptions()},
         disabled: {type: Boolean, default: false}
     },
     data() {
