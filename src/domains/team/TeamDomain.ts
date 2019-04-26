@@ -3,7 +3,7 @@ import { userKey } from '@/constants.ts';
 import TeamModel from "@/models/team/TeamModel.ts"
 import QueryOptions from "@/models/QueryOptions.ts"
 import ResponseModel from "@/models/ResponseModel.ts"
-import { AxiosResponse, AxiosError } from 'axios';
+import { AxiosResponse, AxiosError } from "axios";
 
 export default class TeamDomain {
 
@@ -109,7 +109,7 @@ export default class TeamDomain {
                 url: http.routes.team.searchMy.path(""),
                 params: queryOptions.toAxiosParams()
             })
-            .then((response: any) => {
+            .then((response: AxiosResponse) => {
                 let myTeams: Array<TeamModel> = new Array();
                 let user = JSON.parse(localStorage.getItem(userKey) || "");
 

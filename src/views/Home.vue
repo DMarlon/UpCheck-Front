@@ -1,7 +1,7 @@
 <template>
     <v-container grid-list-xl>
         <v-layout row wrap >
-            <v-flex xs12 sm6 md4 v-for="item in mocklist" v-bind:key="item.title">
+            <v-flex xs12 sm6 md4 v-for="(item,id) in mocklist" v-bind:key="id">
               <PreviewCheckList v-bind:infos="item" />
             </v-flex>
         </v-layout>
