@@ -74,4 +74,24 @@ export default class AuthDomain {
             })
         );
     }
+
+    public tokenValidation()
+    {
+        return new Promise((resolve, reject) =>
+        http.ajax.request({
+            method: http.routes.token.validation.method,
+            url: http.routes.token.validation.path()
+        })
+        .then((response: AxiosResponse) => {
+            return resolve(new ResponseModel(200, "sucess", "Token validado com sucesso!").standardResponse(response));
+        })
+        .catch((error: AxiosError) => {
+            let customError = new ResponseModel(500, "error", "Contate o administrador!");
+            if (error.response)
+                customError = customError.standardResponse(error.response);
+
+            return reject(customError);
+        })
+    );
+    }
 }

@@ -16,6 +16,7 @@ import Footer from '@/components/template/Footer.vue';
 import Loading from '@/components/Loading.vue';
 
 import { userKey } from '@/constants.ts';
+import AuthDomain from "@/domains/auth/AuthDomain.ts"
 
 export default {
     name: 'App',
@@ -35,7 +36,7 @@ export default {
         let urlPath = window.location.pathname.split("/")
         if (urlPath.length == 3 && urlPath[1]=="activation" && RegExp("[0-9a-f]{40}").test(urlPath[2])){
             this.validatingToken = false;
-            this.$router.push({name: "activation", param: {token: urlPath[2]}})
+            this.$router.push({name: "activation", param: {token: urlPath[2]}});
         }
         else
             this.validateToken();
@@ -46,30 +47,27 @@ export default {
         }
     },
     methods: {
-        validateToken() {
-            this.validatingToken = true
+        async validateToken() {
+            this.validatingToken = true;
 
-            const userData = JSON.parse(localStorage.getItem(userKey))
-            this.$store.dispatch("template/setUser", userData)
+            const userData = JSON.parse(localStorage.getItem(userKey));
+            this.$store.dispatch("template/setUser", userData);
 
             if (!userData) {
-                this.validatingToken = false
-                this.$router.push({name: "auth"})
+                this.validatingToken = false;
+                this.$router.push({name: "auth"});
                 return
             }
 
-            this.$http.get("token", {userData})
-            .then(response => {
-                if (response.status === 200)
-                    this.$store.dispatch("template/setUser", userData)
-            })
-            .catch(() => {
-                localStorage.removeItem(userKey)
-                this.$router.push({name: "auth"})
-            })
-            .finally(() => {
-                this.validatingToken = false;
-            });
+            let auth = new AuthDomain();
+            try {
+                await auth.tokenValidation();
+            } catch (error) {
+                localStorage.removeItem(userKey);
+                this.$router.push({name: "auth"});
+            }
+
+            this.validatingToken = false;
         }
     }
 }
