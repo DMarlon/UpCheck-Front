@@ -26,10 +26,6 @@ const RoutesAPI = {
             method: "GET",
             path: (hash: String)=>"teams" + (hash && hash !="" ? "/" + hash : ""),
         },
-        searchMy: {
-            method: "GET",
-            path: (hash: String)=>"teams/my" + (hash && hash !="" ? "/" + hash : ""),
-        },
         create: {
             method: "POST",
             path: ()=>"teams",

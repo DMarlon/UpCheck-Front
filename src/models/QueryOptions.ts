@@ -18,8 +18,6 @@ export default class QueryOptions {
         this._order = "";
     }
 
-
-
     get term(): String
     {
         return this._term;

@@ -3,6 +3,7 @@ import { userKey } from '@/constants.ts';
 import TeamModel from "@/models/team/TeamModel.ts"
 import QueryOptions from "@/models/QueryOptions.ts"
 import ResponseModel from "@/models/ResponseModel.ts"
+import {statusOptions } from "@/constants.ts"
 import { AxiosResponse, AxiosError } from "axios";
 
 export default class TeamDomain {
@@ -86,6 +87,7 @@ export default class TeamDomain {
                     team.user.email = response.data.data.user.email
                     team.hash = response.data.data.hash;
                     team.isOwner = user && user.email && user.email == response.data.data.user.email;
+                    team.status = statusOptions[response.data.data.status-1];
                     team.route = {name: 'about'};
                 }
 
@@ -101,26 +103,30 @@ export default class TeamDomain {
         )
     }
 
-    public search(queryOptions: QueryOptions = new QueryOptions()): any
+    public search(queryOptions: QueryOptions = new QueryOptions(), my: Boolean = false): any
     {
+        let params = queryOptions.toAxiosParams();
+        params.my = my;
+
         return new Promise((resolve, reject) =>
             http.ajax.request({
-                method: http.routes.team.searchMy.method,
-                url: http.routes.team.searchMy.path(""),
-                params: queryOptions.toAxiosParams()
+                method: http.routes.team.search.method,
+                url: http.routes.team.search.path(""),
+                params: params
             })
             .then((response: AxiosResponse) => {
                 let myTeams: Array<TeamModel> = new Array();
                 let user = JSON.parse(localStorage.getItem(userKey) || "");
 
                 if (response.data.data && response.data.data.teams && Array.isArray(response.data.data.teams)) {
-                    myTeams = response.data.data.teams.map(item => {
+                    myTeams = response.data.data.teams.map((item: any) => {
                                 let team = new TeamModel();
                                 team.name = item.name;
                                 team.user.name = item.user.name;
                                 team.user.email = item.user.email
                                 team.hash = item.hash;
                                 team.isOwner = user && user.email && user.email == item.user.email;
+                                team.status = statusOptions[item.status-1];
                                 team.route = {name: 'about'};
 
                                 return team;

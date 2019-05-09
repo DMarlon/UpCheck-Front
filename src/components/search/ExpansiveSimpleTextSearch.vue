@@ -64,7 +64,7 @@ export default {
             this.$emit('input', this.queryOptions);
             this.$emit("searchButtomClick", true)
         },
-        searchClick(event) {
+        searchClick() {
             this.$emit('input', this.queryOptions);
             this.$emit("searchClick", this.queryOptions.term)
         },
@@ -78,7 +78,7 @@ export default {
             this.$emit('input', this.queryOptions);
             this.$emit("searchOptionClick", item)
         },
-        searchOptionClearClick(item) {
+        searchOptionClearClick() {
             this.queryOptions.filter = ""
             this.$emit('input', this.queryOptions);
             this.$emit("searchOptionClearClick", true)

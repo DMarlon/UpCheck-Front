@@ -112,9 +112,6 @@ export default {
         FullScreenDialogEditor,
         ExpansiveSimpleTextSearch
     },
-    created(){
-        this.getMyTeams();
-    },
     data(){
         return {
             searchTeam: false,
@@ -141,14 +138,17 @@ export default {
             }
         }
     },
+    created(){
+        this.getMyTeams();
+    },
     methods: {
         async getMyTeams() {
-            this.searchTeam = true
+            this.searchTeam = true;
             this.myTeams = [];
 
             let team = new TeamDomain();
             try {
-                this.myTeams = await team.search(this.queryOptions);
+                this.myTeams = await team.search(this.queryOptions, true);
             } catch (error) {
                 console.log("ver o que fazer", error);
             }
