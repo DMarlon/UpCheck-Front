@@ -24,19 +24,19 @@ const RoutesAPI = {
     team: {
         search: {
             method: "GET",
-            path: (hash: String)=>"teams" + (hash && hash !="" ? "/" + hash : ""),
+            path: (hash: String)=>"team" + (hash && hash !="" ? "/" + hash : ""),
         },
         create: {
             method: "POST",
-            path: ()=>"teams",
+            path: ()=>"team",
         },
         edit: {
             method: "PUT",
-            path: (hash: String)=>"teams/" + hash,
+            path: (hash: String)=>"team/" + hash,
         },
         delete: {
             method: "DELETE",
-            path: (hash: String)=>"teams/" + hash,
+            path: (hash: String)=>"team/" + hash,
         }
     },
 }
