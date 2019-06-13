@@ -25,16 +25,6 @@ const router = new Router({
 			meta: { ignoreAuthentication: true }
 		},
 		{
-			path: '/home',
-			name: 'home',
-			component: Home,
-		},
-		{
-			path: '/teams',
-			name: 'teams',
-			component: () => import(/* webpackChunkName: "Teams" */ '@/views/team/Teams.vue')
-		},
-		{
 			path: '/about',
 			name: 'about',
 			// route level code-splitting
@@ -43,7 +33,16 @@ const router = new Router({
 			component: () => import(/* webpackChunkName: "about" */ '@/views/About.vue')
 		},
 		{
-			//Caso digite rota inexistente vai para o home
+			path: '/teams',
+			name: 'teams',
+			component: () => import(/* webpackChunkName: "Teams" */ '@/views/team/Teams.vue')
+		},
+		{
+			path: '/home',
+			name: 'home',
+			component: Home,
+		},
+		{
 			path: '*',
 			redirect: 'home'
 		}

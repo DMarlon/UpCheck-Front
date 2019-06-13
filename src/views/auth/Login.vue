@@ -1,37 +1,41 @@
 <template>
-    <v-flex xs12 sm8 md4>
-        <v-card :light="true" class="elevation-12">
-            <v-toolbar dark color="primary">
-                <v-toolbar-title><span v-if="!showSignup">Novo </span>Login</v-toolbar-title>
-            </v-toolbar>
-            <v-card-text>
-                <v-form ref="formAuth">
-                    <v-text-field v-bind:disabled="loading" v-if="!showSignup" v-model.trim="user.name" v-bind:rules="nameRules" prepend-icon="person" name="name" label="Nome Completo" type="Nome"/>
-                    <v-text-field v-bind:disabled="loading" v-model.trim="user.email" v-bind:rules="emailRules" prepend-icon="alternate_email" name="email" label="E-mail" type="text"/>
-                    <v-text-field v-bind:disabled="loading" v-model.trim="user.password" prepend-icon="lock" name="password" label="Senha" id="password" type="password"/>
-                    <v-text-field v-bind:disabled="loading" v-if="!showSignup" v-bind:rules="passwordConfirm" prepend-icon="lock" name="password_confirm" label="Confirme a Senha" id="password_confirm" type="password"/>
-                </v-form>
-            </v-card-text>
-            <v-card-actions>
-                <v-layout row wrap>
-                    <v-flex xs12>
-                        <v-layout column align-end>
-                            <div>
-                                <v-btn v-bind:disabled="loading" v-if="showSignup" v-on:click="login()" color="secondary">Entrar</v-btn>
-                                <v-btn v-bind:disabled="loading" v-else v-on:click="register()" color="secondary darken-3">Cadastrar</v-btn>
-                            </div>
+    <v-container fluid fill-height>
+        <v-layout align-center justify-center>
+            <v-flex xs12 sm8 md4>
+                <v-card :light="true" class="elevation-12">
+                    <v-toolbar dark color="primary">
+                        <v-toolbar-title><span v-if="!showSignup">Novo </span>Login</v-toolbar-title>
+                    </v-toolbar>
+                    <v-card-text>
+                        <v-form ref="formAuth">
+                            <v-text-field v-bind:disabled="loading" v-if="!showSignup" v-model.trim="user.name" v-bind:rules="nameRules" prepend-icon="person" name="name" label="Nome Completo" type="Nome"/>
+                            <v-text-field v-bind:disabled="loading" v-model.trim="user.email" v-bind:rules="emailRules" prepend-icon="alternate_email" name="email" label="E-mail" type="text"/>
+                            <v-text-field v-bind:disabled="loading" v-model.trim="user.password" prepend-icon="lock" name="password" label="Senha" id="password" type="password"/>
+                            <v-text-field v-bind:disabled="loading" v-if="!showSignup" v-bind:rules="passwordConfirm" prepend-icon="lock" name="password_confirm" label="Confirme a Senha" id="password_confirm" type="password"/>
+                        </v-form>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-layout row wrap>
+                            <v-flex xs12>
+                                <v-layout column align-end>
+                                    <div>
+                                        <v-btn v-bind:disabled="loading" v-if="showSignup" v-on:click="login()" color="secondary">Entrar</v-btn>
+                                        <v-btn v-bind:disabled="loading" v-else v-on:click="register()" color="secondary darken-3">Cadastrar</v-btn>
+                                    </div>
+                                </v-layout>
+                                <v-progress-linear v-show="loading" color="primary" v-bind:indeterminate="true"/>
+                            </v-flex>
                         </v-layout>
-                        <v-progress-linear v-show="loading" color="primary" v-bind:indeterminate="true"/>
-                    </v-flex>
-                </v-layout>
-            </v-card-actions>
-            <v-toolbar dark color="primary">
-                <a style="color: inherit" v-show="showSignup" v-on:click="!loading && changeRegister(false)">Não tem cadastro? <strong>Cadastre-se!</strong></a>
-                <a style="color: inherit" v-show="!showSignup" v-on:click="!loading && changeRegister(true)">Já tem cadastro? <strong>Entre!</strong></a>
-            </v-toolbar>
-        </v-card>
-        <v-alert :value="notify.show" :type="notify.type">{{ notify.message }}</v-alert>
-    </v-flex>
+                    </v-card-actions>
+                    <v-toolbar dark color="primary">
+                        <a style="color: inherit" v-show="showSignup" v-on:click="!loading && changeRegister(false)">Não tem cadastro? <strong>Cadastre-se!</strong></a>
+                        <a style="color: inherit" v-show="!showSignup" v-on:click="!loading && changeRegister(true)">Já tem cadastro? <strong>Entre!</strong></a>
+                    </v-toolbar>
+                </v-card>
+                <v-alert :value="notify.show" :type="notify.type">{{ notify.message }}</v-alert>
+            </v-flex>
+        </v-layout>
+    </v-container>
 </template>
 
 <script>

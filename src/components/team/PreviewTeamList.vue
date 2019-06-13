@@ -1,5 +1,5 @@
 <template>
-	<v-card dark hover v-bind:to="disabled ? '' : team.to" class="fill-height overflow-hidden" color="teal darken white--text">
+	<v-card hover v-bind:to="disabled ? '' : team.to" class="fill-height overflow-hidden">
 		<v-card-text class="ml-1 headline font-weight-bold">
 			<v-icon big left>settings_overscan</v-icon>
 			{{ team.name }}

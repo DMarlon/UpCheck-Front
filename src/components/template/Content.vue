@@ -1,11 +1,14 @@
 <template>
-    <v-content >
+    <v-content>
+<!--
         <v-container fluid fill-height>
             <v-layout align-center justify-center>
-                <router-view>
-                </router-view>
+                <slot></slot>
             </v-layout>
         </v-container>
+-->
+        <router-view>
+        </router-view>
     </v-content>
 </template>
 

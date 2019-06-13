@@ -19,11 +19,11 @@
             <v-list>
                 <v-list-tile>
                     <v-list-tile-action>
-                        <v-switch v-model="dark" color="teal darken-1"></v-switch>
+                        <v-switch v-model="dark" color="primary darken-1"></v-switch>
                     </v-list-tile-action>
                     <v-list-tile-title>Thema</v-list-tile-title>
                 </v-list-tile>
-                <v-list-tile active-class="default-class teal darken-1 white--text" v-on:click="logout()">
+                <v-list-tile active-class="default-class primary darken-1 white--text" v-on:click="logout()">
                     <v-list-tile-action>
                         <v-icon>exit_to_app</v-icon>
                     </v-list-tile-action>

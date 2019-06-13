@@ -86,6 +86,8 @@ export default class AuthDomain {
             return resolve(new ResponseModel(200, "sucess", "Token validado com sucesso!").standardResponse(response));
         })
         .catch((error: AxiosError) => {
+            console.log(error);
+
             let customError = new ResponseModel(500, "error", "Contate o administrador!");
             if (error.response)
                 customError = customError.standardResponse(error.response);

@@ -1,30 +1,31 @@
 <template>
-    <Loading v-if="gettingInformations" v-bind:text="loadingText" />
-    <v-container v-else>
-        <EditorCard v-bind:title="`Time ${team.name}`">
-            <template v-slot:headAction>
-                <v-btn dark v-bind:disabled="waitRequest" v-on:click="deleteTeam()" flat class="mr-0">
-                    <v-icon>delete_forever</v-icon>
-                </v-btn>
-            </template>
+    <v-container fluid fill-height>
+        <Loading v-if="gettingInformations" v-bind:text="loadingText" />
+        <v-layout v-else align-center justify-center>
+            <EditorCard v-bind:title="`Time ${team.name}`">
+                <template v-slot:headAction>
+                    <v-btn dark v-bind:disabled="waitRequest" v-on:click="deleteTeam()" flat class="mr-0">
+                        <v-icon>delete_forever</v-icon>
+                    </v-btn>
+                </template>
 
-            <template v-slot:body>
-                <v-container>
-                    <v-text-field v-model="team.name" v-bind:disabled="waitRequest" prepend-icon="bookmark" label="Nome do time"/>
-                    <v-text-field v-model="team.user.email" v-bind:disabled="waitRequest" prepend-icon="alternate_email" label="Responsavel pelo time"/>
-                    <v-alert :value="notify.show" :type="notify.type">{{ notify.message }}</v-alert>
-                    <v-progress-linear v-show="waitRequest" color="teal darken-1" v-bind:indeterminate="true"/>
-                </v-container>
-            </template>
+                <template v-slot:body>
+                    <v-container>
+                        <v-text-field v-model="team.name" v-bind:disabled="waitRequest" prepend-icon="bookmark" label="Nome do time"/>
+                        <v-text-field v-model="team.user.email" v-bind:disabled="waitRequest" prepend-icon="alternate_email" label="Responsavel pelo time"/>
+                        <v-alert :value="notify.show" :type="notify.type">{{ notify.message }}</v-alert>
+                        <v-progress-linear v-show="waitRequest" v-bind:indeterminate="true"/>
+                    </v-container>
+                </template>
 
-            <template v-slot:actions>
-                <v-switch v-model="status_toggle" v-bind:disabled="waitRequest" :label="team.status.text" v-on:change="changeStatus($event)" class="ml-3 text-capitalize" color="teal darken-1"/>
-                <v-spacer/>
-                <v-btn v-bind:disabled="waitRequest" v-on:click="saveTeam()" color="primary" flat>Salvar</v-btn>
-                <v-btn v-bind:disabled="waitRequest" v-on:click="()=>{cleanNotify(); getTeam()}" color="primary" flat>Cancelar</v-btn>
-            </template>
-        </EditorCard>
-
+                <template v-slot:actions>
+                    <v-switch v-model="status_toggle" v-bind:disabled="waitRequest" :label="team.status.text" v-on:change="changeStatus($event)" class="ml-3 text-capitalize"/>
+                    <v-spacer/>
+                    <v-btn v-bind:disabled="waitRequest" v-on:click="saveTeam()" flat>Salvar</v-btn>
+                    <v-btn v-bind:disabled="waitRequest" v-on:click="()=>{cleanNotify(); getTeam()}" flat>Cancelar</v-btn>
+                </template>
+            </EditorCard>
+        </v-layout>
     </v-container>
 </template>
 

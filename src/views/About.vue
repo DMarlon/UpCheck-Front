@@ -1,5 +1,5 @@
 <template>
-  <div class="about">
-    <h1>This is an about page</h1>
-  </div>
+    <v-container fluid>
+        <h1 class="display-4 text-xs-center muted">Sobre o UpCheck</h1>
+    </v-container>
 </template>

@@ -1,7 +1,7 @@
 <template>
     <v-card>
-        <v-card color="teal darken-2 font-weight-bold headline white--text" class="ml-4 mr-4" style="top: -24px; margin-bottom: -24px;">
-           <v-toolbar color="teal darken-2 white--text" :prominent="true">
+        <v-card color="primary darken-2 font-weight-bold headline white--text" class="ml-4 mr-4" style="top: -24px; margin-bottom: -24px;">
+           <v-toolbar color="primary darken-2 white--text" :prominent="true">
                 <v-toolbar-title class="font-weight-bold headline">{{ title }}</v-toolbar-title>
                 <v-spacer/>
                 <v-toolbar-items >

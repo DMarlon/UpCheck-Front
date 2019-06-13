@@ -1,7 +1,7 @@
 <template>
-    <v-navigation-drawer v-model="showMenu" :clipped="true" overflow app>
+    <v-navigation-drawer v-model="showMenu" :clipped="false" overflow app>
         <v-list dense class="pt-0">
-            <v-list-tile exact active-class="default-class teal darken-1 white--text" v-for="item in items" :key="item.title" v-bind:to="item.to">
+            <v-list-tile exact active-class="default-class" v-for="item in items" :key="item.title" v-bind:to="item.to">
                 <v-list-tile-action>
                     <v-icon>{{ item.icon }}</v-icon>
                 </v-list-tile-action>
@@ -19,9 +19,9 @@ export default {
     data () {
         return {
             items: [
-                { title: 'Time', icon: 'layers', to: {name: 'teams'} },
-                { title: 'Home', icon: 'dashboard', to: {name: 'home'} },
-                { title: 'About', icon: 'question_answer', to: {name: 'about'} }
+                { title: 'Início', icon: 'style', to: {name: 'home'} },
+                { title: 'Sobre', icon: 'question_answer', to: {name: 'about'} },
+                { title: 'Times', icon: 'dashboard', to: {name: 'teams'} }
             ]
         }
     },
