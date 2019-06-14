@@ -1,7 +1,7 @@
 <template>
-    <v-toolbar :clipped-left="true" app height="45" dark color="primary">
-        <v-toolbar-side-icon v-if="isMenuVisible" v-on:click.stop="showMenu()"/>
-        <v-toolbar-title class="white--text header-title-upcheck"><span class="font-weight-black">UP</span>CHECK</v-toolbar-title>
+    <v-toolbar app height="45" dark color="primary">
+        <v-toolbar-side-icon class="hidden-lg-and-up" v-if="isMenuVisible" v-on:click.stop="showMenu()"/>
+        <v-toolbar-title class="white--text header-title-upcheck">{{ pageTitle }}</v-toolbar-title>
         <v-spacer></v-spacer>
         <UserMenu />
     </v-toolbar>
@@ -18,6 +18,9 @@ export default {
     computed: {
         isMenuVisible() {
             return this.$store.getters["template/isMenuVisible"]
+        },
+        pageTitle() {
+            return this.$store.getters["template/pageTitle"]
         }
     },
     methods: {

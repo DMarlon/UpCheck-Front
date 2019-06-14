@@ -80,6 +80,7 @@ export default {
     },
     created(){
         this.getMyTeams();
+        this.$store.dispatch("template/setPageTitle", "Times");
     },
     methods: {
         async getMyTeams() {
