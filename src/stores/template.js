@@ -8,7 +8,6 @@ export default {
         showMenu: false,
         miniMenu: false,
         user: null,
-        pageTitle: ""
     },
     mutations: {
         setIsMenuVisible(state, isVisible) {
@@ -22,9 +21,6 @@ export default {
         },
         setUser(state, user) {
             state.user = user
-        },
-        setPageTitle(state, title) {
-            state.pageTitle = title
         },
         setDark(state, dark) {
             state.dark = dark
@@ -61,12 +57,6 @@ export default {
                 context.dispatch("setShowMenu", false)
             }
         },
-        setPageTitle(context, title) {
-            if (!context.getters.hasUser)
-                context.commit("setPageTitle", false)
-            else
-                context.commit("setPageTitle", (title === undefined) ? "" : title)
-        },
         setDark(context, dark) {
             if (!context.getters.hasUser)
                 context.commit("setDark", false)
@@ -89,9 +79,6 @@ export default {
         },
         hasUser(state) {
             return state.user != null
-        },
-        pageTitle(state) {
-            return (state.pageTitle) ? state.pageTitle : ""
         },
         userEmail(state) {
             return (state.user && state.user.email) ? state.user.email : ""

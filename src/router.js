@@ -15,14 +15,22 @@ const router = new Router({
 			path: '/auth',
 			name: 'auth',
 			component: Login,
-			meta: { ignoreAuthentication: true }
+			meta: {
+				ignoreAuthentication: true,
+				havePageTitle: true,
+				pageTitle: "Login"
+			 }
 		},
 		{
 			path: '/activation/:token([0-9a-f]{40})',
 			name: 'activation',
 			props: true,
 			component: Login,
-			meta: { ignoreAuthentication: true }
+			meta: {
+				ignoreAuthentication: true,
+				havePageTitle: true,
+				pageTitle: "Ativação"
+			}
 		},
 		{
 			path: '/about',
@@ -30,17 +38,29 @@ const router = new Router({
 			// route level code-splitting
 			// this generates a separate chunk (about.[hash].js) for this route
 			// which is lazy-loaded when the route is visited.
-			component: () => import(/* webpackChunkName: "about" */ '@/views/About.vue')
+			component: () => import(/* webpackChunkName: "about" */ '@/views/About.vue'),
+			meta: {
+				havePageTitle: true,
+				pageTitle: "Sobre"
+			}
 		},
 		{
 			path: '/teams',
 			name: 'teams',
-			component: () => import(/* webpackChunkName: "Teams" */ '@/views/team/Teams.vue')
+			component: () => import(/* webpackChunkName: "Teams" */ '@/views/team/Teams.vue'),
+			meta: {
+				havePageTitle: true,
+				pageTitle: "Times"
+			}
 		},
 		{
 			path: '/home',
 			name: 'home',
 			component: Home,
+			meta: {
+				havePageTitle: true,
+				pageTitle: "Home"
+			}
 		},
 		{
 			path: '*',

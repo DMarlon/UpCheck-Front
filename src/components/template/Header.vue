@@ -1,26 +1,26 @@
 <template>
     <v-toolbar app height="45" dark color="primary">
         <v-toolbar-side-icon class="hidden-lg-and-up" v-if="isMenuVisible" v-on:click.stop="showMenu()"/>
-        <v-toolbar-title class="white--text header-title-upcheck">{{ pageTitle }}</v-toolbar-title>
+        <v-toolbar-title v-if="$route.meta.havePageTitle" class="white--text header-title-upcheck"> {{ $route.meta.pageTitle }}</v-toolbar-title>
         <v-spacer></v-spacer>
+        <SimpleTextSearch/>
         <UserMenu />
     </v-toolbar>
 </template>
 
 <script>
 import UserMenu from '@/components/template/UserMenu.vue';
+import SimpleTextSearch from '@/components/search/SimpleTextSearch.vue';
 
 export default {
     name: "Header",
     components: {
-        UserMenu
+        UserMenu,
+        SimpleTextSearch
     },
     computed: {
         isMenuVisible() {
             return this.$store.getters["template/isMenuVisible"]
-        },
-        pageTitle() {
-            return this.$store.getters["template/pageTitle"]
         }
     },
     methods: {

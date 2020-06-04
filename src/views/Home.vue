@@ -6,9 +6,7 @@
 
 <script>
 export default {
-    created(){
-        this.$store.dispatch("template/setPageTitle", "Home");
-    }
+
 }
 </script>
 
